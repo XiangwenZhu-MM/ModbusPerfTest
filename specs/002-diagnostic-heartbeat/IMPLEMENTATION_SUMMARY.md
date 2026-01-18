@@ -197,6 +197,66 @@ The following test tasks were identified but not implemented (marked as optional
 2. `bf33b74`: Add implementation plan, research, data model, API contracts, and quickstart
 3. `9a2eca6`: Add implementation tasks
 4. `d912ad6`: Implement diagnostic heartbeat monitor (Phase 1-5 complete)
+5. `f6511aa`: Add real-time system latency and clock drift display
+
+## Enhancement: Real-Time Metrics Display
+
+**Date**: January 18, 2026  
+**Commit**: `f6511aa`
+
+### What Changed
+
+Added real-time display of current system latency and clock drift values (not just warnings when thresholds are exceeded).
+
+**New Components**:
+- `HeartbeatMetrics.cs`: Model for current measurements
+- `HeartbeatMetrics.tsx`: React component with 1-second polling
+- `HeartbeatMetrics.css`: Styling with color-coded health status
+- API endpoint: `GET /api/heartbeat/metrics`
+
+**Key Features**:
+- **Real-time updates**: Polls every 1 second (vs 2 seconds for warnings)
+- **Visual health indicator**: Green (healthy), Orange (latency), Red (drift), Pink (both)
+- **Two metrics displayed**:
+  - System Latency: How much longer than expected the heartbeat took (0ms = on time)
+  - Clock Drift: Divergence between monotonic and wall clock time
+- **Details shown**: Expected vs actual timing for both metrics
+- **Thread-safe**: Lock-protected access to shared state
+
+**UI Location**: System Health Metrics panel, above Heartbeat Warnings section
+
+### Technical Implementation
+
+```
+HeartbeatMonitor Service (Background)
+  ├─ Every 1000ms: Measures timing with Stopwatch + DateTime
+  ├─ Stores latest values in _lastMonoElapsedMs, _lastWallElapsedMs, _lastCheckedAt
+  └─ Exposes GetCurrentMetrics() with lock protection
+
+HeartbeatController
+  └─ GET /api/heartbeat/metrics → Returns HeartbeatMetrics
+
+HeartbeatMetrics Component (Frontend)
+  ├─ Polls API every 1 second
+  ├─ Calculates health status (green/orange/red/pink)
+  └─ Displays current latency + clock drift with visual indicators
+```
+
+### Example Display
+
+```
+Real-Time System Metrics
+[✓ Healthy] Last Check: 3:45:12 PM
+
+┌─────────────────┬─────────────────┐
+│ System Latency  │  Clock Drift    │
+│     0 ms        │    15.2 ms      │
+│ Expected: 1000ms│ Mono: 1001ms    │
+│ Actual: 1001ms  │ Wall: 1016ms    │
+└─────────────────┴─────────────────┘
+```
+
+When latency exceeds 0ms or drift exceeds 500ms, the display turns orange/red and shows alert styling.
 
 ## Conclusion
 
