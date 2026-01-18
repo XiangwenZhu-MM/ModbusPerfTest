@@ -51,4 +51,9 @@ export const api = {
     const response = await fetch(`${API_BASE_URL}/Heartbeat/config`);
     return response.json();
   },
+
+  async getHeartbeatMetrics() {
+    const response = await fetch(`${API_BASE_URL}/Heartbeat/metrics`);
+    return response.json();
+  },
 };

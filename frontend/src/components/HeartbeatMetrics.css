@@ -1,0 +1,133 @@
+.heartbeat-metrics {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.heartbeat-metrics h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 18px;
+  color: #1f2937;
+}
+
+.status-indicator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.status-indicator.healthy {
+  background-color: #d1fae5;
+  border-left: 4px solid #10b981;
+  color: #065f46;
+}
+
+.status-indicator.warning-latency {
+  background-color: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  color: #92400e;
+}
+
+.status-indicator.warning-drift {
+  background-color: #fee2e2;
+  border-left: 4px solid #ef4444;
+  color: #991b1b;
+}
+
+.status-indicator.critical {
+  background-color: #fce7f3;
+  border-left: 4px solid #dc2626;
+  color: #831843;
+}
+
+.status-label {
+  font-size: 16px;
+}
+
+.status-time {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.metric-item {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.metric-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.metric-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.metric-value.alert {
+  color: #dc2626;
+}
+
+.metric-detail {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.metrics-info {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.info-label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.info-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.error-message,
+.loading {
+  padding: 12px;
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.error-message {
+  color: #dc2626;
+}

@@ -63,3 +63,13 @@ export interface HeartbeatConfig {
   logFilePath: string;
   maxLogFileSizeMB: number;
 }
+
+export interface HeartbeatMetrics {
+  lastMonoElapsedMs: number;
+  lastWallElapsedMs: number;
+  lastCheckedAt: string;
+  expectedIntervalMs: number;
+  latencyMs: number;
+  clockDriftMs: number;
+  isHealthy: boolean;
+}

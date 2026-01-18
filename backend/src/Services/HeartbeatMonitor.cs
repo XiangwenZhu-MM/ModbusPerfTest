@@ -14,6 +14,12 @@ public class HeartbeatMonitor : BackgroundService
     private readonly ILogger<HeartbeatMonitor> _logger;
     private readonly HeartbeatLogger _heartbeatLogger;
     private readonly ConcurrentQueue<DriftEvent> _recentWarnings = new();
+    
+    // Current metrics (protected by lock)
+    private readonly object _metricsLock = new();
+    private long _lastMonoElapsedMs;
+    private double _lastWallElapsedMs;
+    private DateTime _lastCheckedAt = DateTime.UtcNow;
 
     public HeartbeatMonitor(HeartbeatConfig config, ILogger<HeartbeatMonitor> logger, HeartbeatLogger heartbeatLogger)
     {
@@ -36,6 +42,25 @@ public class HeartbeatMonitor : BackgroundService
     public HeartbeatConfig GetConfig()
     {
         return _config;
+    }
+
+    /// <summary>
+    /// Gets the current real-time heartbeat metrics.
+    /// </summary>
+    public HeartbeatMetrics GetCurrentMetrics()
+    {
+        lock (_metricsLock)
+        {
+            return new HeartbeatMetrics
+            {
+                LastMonoElapsedMs = _lastMonoElapsedMs,
+                LastWallElapsedMs = _lastWallElapsedMs,
+                LastCheckedAt = _lastCheckedAt,
+                ExpectedIntervalMs = _config.IntervalMs,
+                LatencyMs = Math.Max(0, _lastMonoElapsedMs - _config.IntervalMs),
+                ClockDriftMs = Math.Abs(_lastMonoElapsedMs - _lastWallElapsedMs)
+            };
+        }
     }
 
     /// <summary>
@@ -101,6 +126,14 @@ public class HeartbeatMonitor : BackgroundService
     /// </summary>
     private void EvaluateDrift(long monoMs, double wallMs, DateTime timestamp)
     {
+        // Update current metrics for API access
+        lock (_metricsLock)
+        {
+            _lastMonoElapsedMs = monoMs;
+            _lastWallElapsedMs = wallMs;
+            _lastCheckedAt = timestamp;
+        }
+        
         // Detection 1: Internal Latency (Process/OS Stall)
         if (monoMs > _config.ThresholdMs)
         {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SystemHealthMetric, ClockDriftStatistics } from '../types';
 import { api } from '../api';
+import HeartbeatMetrics from './HeartbeatMetrics';
 import HeartbeatWarnings from './HeartbeatWarnings';
 
 const SystemHealthPanel: React.FC = () => {
@@ -97,6 +98,7 @@ const SystemHealthPanel: React.FC = () => {
         )}
       </div>
 
+      <HeartbeatMetrics />
       <HeartbeatWarnings />
     </div>
   );

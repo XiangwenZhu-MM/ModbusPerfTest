@@ -57,4 +57,23 @@ public class HeartbeatController : ControllerBase
             return StatusCode(500, new { message = "Internal server error occurred" });
         }
     }
+
+    /// <summary>
+    /// Gets the current real-time heartbeat metrics.
+    /// </summary>
+    /// <returns>Current heartbeat metrics including latency and clock drift.</returns>
+    [HttpGet("metrics")]
+    public ActionResult<HeartbeatMetrics> GetMetrics()
+    {
+        try
+        {
+            var metrics = _heartbeatMonitor.GetCurrentMetrics();
+            return Ok(metrics);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to retrieve heartbeat metrics");
+            return StatusCode(500, new { message = "Internal server error occurred" });
+        }
+    }
 }

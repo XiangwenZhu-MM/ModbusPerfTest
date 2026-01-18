@@ -113,10 +113,10 @@ description: "Task list for Diagnostic Heartbeat Monitor implementation"
 
 **Purpose**: Final validation and documentation
 
-- [ ] T027 [P] Verify `logs/` directory creation and log rotation behavior in production-like environment
-- [ ] T028 Validate SC-004: Performance impact check (CPU/Memory usage < budget)
-- [ ] T029 Clean up any temporary debug logging in background service
-- [ ] T030 Run all acceptance scenarios from `spec.md` and validate against `quickstart.md`
+- [x] T027 [P] Verify `logs/` directory creation and log rotation behavior in production-like environment
+- [x] T028 Validate SC-004: Performance impact check (CPU/Memory usage < budget)
+- [x] T029 Clean up any temporary debug logging in background service
+- [x] T030 Run all acceptance scenarios from `spec.md` and validate against `quickstart.md`
 
 ---
 
