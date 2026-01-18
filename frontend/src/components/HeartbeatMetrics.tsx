@@ -115,7 +115,7 @@ const HeartbeatMetrics: React.FC = () => {
 
   return (
     <div className="heartbeat-metrics">
-      <h3>Real-Time System Metrics</h3>
+      <h3>System & Clock Drift</h3>
       <div className={`status-indicator ${getHealthStatus()}`}>
         <span className="status-label">{getStatusLabel()}</span>
         <span className="status-time">Last Check: {formatTimestamp(metrics.lastCheckedAt)}</span>

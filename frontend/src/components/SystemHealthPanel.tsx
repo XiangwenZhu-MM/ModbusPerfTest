@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { SystemHealthMetric, ClockDriftStatistics } from '../types';
+import { SystemHealthMetric, HeartbeatMetrics as HeartbeatMetricsType } from '../types';
 import { api } from '../api';
 import HeartbeatMetrics from './HeartbeatMetrics';
 import HeartbeatWarnings from './HeartbeatWarnings';
 
 const SystemHealthPanel: React.FC = () => {
   const [health, setHealth] = useState<SystemHealthMetric | null>(null);
-  const [clockDrift, setClockDrift] = useState<ClockDriftStatistics | null>(null);
+  const [currentMetrics, setCurrentMetrics] = useState<HeartbeatMetricsType | null>(null);
   const [queueStats, setQueueStats] = useState<any>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [healthData, driftData, queueData] = await Promise.all([
+        const [healthData, metricsData, queueData] = await Promise.all([
           api.getSystemHealth(),
-          api.getClockDriftStatistics(),
+          api.getHeartbeatMetrics(),
           api.getQueueStats(),
         ]);
         setHealth(healthData);
-        setClockDrift(driftData);
+        setCurrentMetrics(metricsData);
         setQueueStats(queueData);
       } catch (error) {
         console.error('Error fetching system health:', error);
@@ -41,8 +41,15 @@ const SystemHealthPanel: React.FC = () => {
     <div className="panel">
       <h2>System Health Metrics</h2>
       
-      {health ? (
+      {health && currentMetrics ? (
         <div className="metrics-grid">
+          <div className={`metric-card ${currentMetrics.latencyMs > 0 ? 'metric-alert' : ''}`}>
+            <h3>System Latency</h3>
+            <div className="metric-value">{currentMetrics.latencyMs} ms</div>
+            <div className="metric-label">
+              {currentMetrics.latencyMs > 0 ? '⚠️ Delayed' : '✓ On Time'}
+            </div>
+          </div>
           <div className="metric-card">
             <h3>Ingress Rate</h3>
             <div className="metric-value">{health.ingressTPM.toFixed(1)} TPM</div>
@@ -53,36 +60,15 @@ const SystemHealthPanel: React.FC = () => {
             <div className="metric-value">{health.egressTPM.toFixed(1)} TPM</div>
             <div className="metric-label">Tasks completed per minute</div>
           </div>
-          <div className={`metric-card saturation-${getSaturationStatus(health.saturationIndex)}`}>
-            <h3>Saturation</h3>
-            <div className="metric-value">{health.saturationIndex.toFixed(1)}%</div>
-            <div className="metric-label">
-              {health.saturationIndex > 100 ? '⚠️ OVERLOAD' : '✓ Normal'}
-            </div>
-          </div>
           <div className="metric-card">
-            <h3>Dropped Tasks</h3>
-            <div className="metric-value">{health.droppedTPM.toFixed(1)} TPM</div>
-            <div className="metric-label">Tasks dropped per minute</div>
+            <h3>Total Dropped Tasks</h3>
+            <div className="metric-value">{queueStats?.totalDropped || 0}</div>
+            <div className="metric-label">Lifetime dropped count</div>
           </div>
         </div>
       ) : (
         <p>Loading system health...</p>
       )}
-
-      <div className="subsection">
-        <h3>Clock Drift Statistics</h3>
-        {clockDrift && clockDrift.totalMeasurements > 0 ? (
-          <div className="stats-grid">
-            <div><strong>Average:</strong> {clockDrift.averageDriftMs.toFixed(2)} ms</div>
-            <div><strong>Min:</strong> {clockDrift.minDriftMs.toFixed(2)} ms</div>
-            <div><strong>Max:</strong> {clockDrift.maxDriftMs.toFixed(2)} ms</div>
-            <div><strong>Std Dev:</strong> {clockDrift.standardDeviationMs.toFixed(2)} ms</div>
-          </div>
-        ) : (
-          <p>No clock drift data available</p>
-        )}
-      </div>
 
       <div className="subsection">
         <h3>Queue Statistics</h3>
