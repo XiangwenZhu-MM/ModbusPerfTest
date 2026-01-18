@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { HeartbeatMetrics } from '../types';
+import { HeartbeatMetrics as HeartbeatMetricsType } from '../types';
 import { api } from '../api';
 import './HeartbeatMetrics.css';
 
 const HeartbeatMetrics: React.FC = () => {
-  const [metrics, setMetrics] = useState<HeartbeatMetrics | null>(null);
+  const [metrics, setMetrics] = useState<HeartbeatMetricsType | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
