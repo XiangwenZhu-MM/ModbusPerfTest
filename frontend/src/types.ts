@@ -44,3 +44,22 @@ export interface DataQualityState {
   lastSuccessTimestamp?: string;
   stalenessThresholdMs: number;
 }
+
+export interface DriftEvent {
+  eventType: 'PERFORMANCE_DEGRADED' | 'CLOCK_SHIFT';
+  timestamp: string;
+  monoElapsedMs: number;
+  wallElapsedMs: number;
+  expectedIntervalMs: number;
+  deviationMs: number;
+  message: string;
+}
+
+export interface HeartbeatConfig {
+  enabled: boolean;
+  intervalMs: number;
+  thresholdMs: number;
+  maxWarningsInMemory: number;
+  logFilePath: string;
+  maxLogFileSizeMB: number;
+}

@@ -23,10 +23,10 @@ description: "Task list for Diagnostic Heartbeat Monitor implementation"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create `backend/src/Models/` directory for new data entities
-- [ ] T002 Create `backend/src/Api/` and `backend/src/Services/` directories if not present
-- [ ] T003 Create `logs/` directory at repository root for heartbeat warning logs
-- [ ] T004 [P] Add heartbeat configuration section to `backend/appsettings.json`
+- [x] T001 Create `backend/src/Models/` directory for new data entities
+- [x] T002 Create `backend/src/Api/` and `backend/src/Services/` directories if not present
+- [x] T003 Create `logs/` directory at repository root for heartbeat warning logs
+- [x] T004 [P] Add heartbeat configuration section to `backend/appsettings.json`
 
 ---
 
@@ -34,10 +34,10 @@ description: "Task list for Diagnostic Heartbeat Monitor implementation"
 
 **Purpose**: Core model and configuration infrastructure required for all detection logic
 
-- [ ] T005 [P] Implement `HeartbeatConfig` model in `backend/src/Models/HeartbeatConfig.cs`
-- [ ] T006 [P] Implement `DriftEvent` model in `backend/src/Models/DriftEvent.cs`
-- [ ] T007 Add `DriftEvent` and `HeartbeatConfig` interfaces to `frontend/src/types.ts`
-- [ ] T008 [P] Configure dependency injection for `HeartbeatConfig` in `backend/Program.cs`
+- [x] T005 [P] Implement `HeartbeatConfig` model in `backend/src/Models/HeartbeatConfig.cs`
+- [x] T006 [P] Implement `DriftEvent` model in `backend/src/Models/DriftEvent.cs`
+- [x] T007 Add `DriftEvent` and `HeartbeatConfig` interfaces to `frontend/src/types.ts`
+- [x] T008 [P] Configure dependency injection for `HeartbeatConfig` in `backend/Program.cs`
 
 **Checkpoint**: Foundation ready - core models and configuration available for service implementation.
 
@@ -56,11 +56,11 @@ description: "Task list for Diagnostic Heartbeat Monitor implementation"
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Implement `HeartbeatMonitor` background service base in `backend/src/Services/HeartbeatMonitor.cs` (PeriodicTimer loop)
-- [ ] T012 [US1] Implement internal latency detection logic in `backend/src/Services/HeartbeatMonitor.cs` (Stopwatch comparison)
-- [ ] T013 [US1] Implement system clock shift detection logic in `backend/src/Services/HeartbeatMonitor.cs` (Wall clock comparison)
-- [ ] T014 [US1] Implement schedule realignment logic to ensure recovery after drift events in `backend/src/Services/HeartbeatMonitor.cs`
-- [ ] T015 [US1] Register `HeartbeatMonitor` as a hosted service in `backend/Program.cs`
+- [x] T011 [US1] Implement `HeartbeatMonitor` background service base in `backend/src/Services/HeartbeatMonitor.cs` (PeriodicTimer loop)
+- [x] T012 [US1] Implement internal latency detection logic in `backend/src/Services/HeartbeatMonitor.cs` (Stopwatch comparison)
+- [x] T013 [US1] Implement system clock shift detection logic in `backend/src/Services/HeartbeatMonitor.cs` (Wall clock comparison)
+- [x] T014 [US1] Implement schedule realignment logic to ensure recovery after drift events in `backend/src/Services/HeartbeatMonitor.cs`
+- [x] T015 [US1] Register `HeartbeatMonitor` as a hosted service in `backend/Program.cs`
 
 **Checkpoint**: User Story 1 functional - health issues detected in memory in the background.
 
@@ -79,10 +79,10 @@ description: "Task list for Diagnostic Heartbeat Monitor implementation"
 
 ### Implementation for User Story 2
 
-- [ ] T018 [US2] Implement `HeartbeatLogger` service with size-based rotation in `backend/src/Services/HeartbeatLogger.cs`
-- [ ] T019 [US2] Integrate `HeartbeatLogger` into `HeartbeatMonitor` to persist detected events
-- [ ] T020 [US2] Implement in-memory bounded cache (ConcurrentQueue) for recent warnings in `backend/src/Services/HeartbeatMonitor.cs`
-- [ ] T021 [US2] Implement `HeartbeatController` with `GET /api/heartbeat/warnings` and `GET /api/heartbeat/config` in `backend/src/Api/HeartbeatController.cs`
+- [x] T018 [US2] Implement `HeartbeatLogger` service with size-based rotation in `backend/src/Services/HeartbeatLogger.cs`
+- [x] T019 [US2] Integrate `HeartbeatLogger` into `HeartbeatMonitor` to persist detected events
+- [x] T020 [US2] Implement in-memory bounded cache (ConcurrentQueue) for recent warnings in `backend/src/Services/HeartbeatMonitor.cs`
+- [x] T021 [US2] Implement `HeartbeatController` with `GET /api/heartbeat/warnings` and `GET /api/heartbeat/config` in `backend/src/Api/HeartbeatController.cs`
 
 **Checkpoint**: User Story 2 functional - historical warnings preserved in file and available via API.
 
@@ -100,10 +100,10 @@ description: "Task list for Diagnostic Heartbeat Monitor implementation"
 
 ### Implementation for User Story 3
 
-- [ ] T023 [P] [US3] Add `fetchHeartbeatWarnings` and `fetchHeartbeatConfig` to `frontend/src/api.ts`
-- [ ] T024 [US3] Create `HeartbeatWarnings` React component in `frontend/src/components/HeartbeatWarnings.tsx` with interval polling (2s)
-- [ ] T025 [US3] Integrate `HeartbeatWarnings` component into `frontend/src/components/SystemHealthPanel.tsx`
-- [ ] T026 [US3] Add styling for warnings (distinguish between latency and clock shift types) in `frontend/src/components/HeartbeatWarnings.css`
+- [x] T023 [P] [US3] Add `fetchHeartbeatWarnings` and `fetchHeartbeatConfig` to `frontend/src/api.ts`
+- [x] T024 [US3] Create `HeartbeatWarnings` React component in `frontend/src/components/HeartbeatWarnings.tsx` with interval polling (2s)
+- [x] T025 [US3] Integrate `HeartbeatWarnings` component into `frontend/src/components/SystemHealthPanel.tsx`
+- [x] T026 [US3] Add styling for warnings (distinguish between latency and clock shift types) in `frontend/src/components/HeartbeatWarnings.css`
 
 **Checkpoint**: All user stories complete - diagnostic heartbeat monitoring fully integrated from background to UI.
 

@@ -41,4 +41,14 @@ export const api = {
     });
     return response.json();
   },
+
+  async getHeartbeatWarnings() {
+    const response = await fetch(`${API_BASE_URL}/Heartbeat/warnings`);
+    return response.json();
+  },
+
+  async getHeartbeatConfig() {
+    const response = await fetch(`${API_BASE_URL}/Heartbeat/config`);
+    return response.json();
+  },
 };

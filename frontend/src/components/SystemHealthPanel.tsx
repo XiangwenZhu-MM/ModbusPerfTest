@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SystemHealthMetric, ClockDriftStatistics } from '../types';
 import { api } from '../api';
+import HeartbeatWarnings from './HeartbeatWarnings';
 
 const SystemHealthPanel: React.FC = () => {
   const [health, setHealth] = useState<SystemHealthMetric | null>(null);
@@ -95,6 +96,8 @@ const SystemHealthPanel: React.FC = () => {
           <p>Loading queue stats...</p>
         )}
       </div>
+
+      <HeartbeatWarnings />
     </div>
   );
 };

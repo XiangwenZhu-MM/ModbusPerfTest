@@ -1,4 +1,5 @@
 using ModbusPerfTest.Backend.Services;
+using ModbusPerfTest.Backend.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,27 @@ else
 builder.Services.AddSingleton<ClockDriftService>();
 builder.Services.AddSingleton<DataQualityService>();
 builder.Services.AddSingleton<DeviceScanManager>();
+
+// Configure HeartbeatMonitor
+var heartbeatConfig = builder.Configuration.GetSection("HeartbeatMonitor").Get<HeartbeatConfig>() ?? new HeartbeatConfig();
+try
+{
+    heartbeatConfig.Validate();
+    builder.Services.AddSingleton(heartbeatConfig);
+    Console.WriteLine($"Heartbeat monitor configured: Enabled={heartbeatConfig.Enabled}, Interval={heartbeatConfig.IntervalMs}ms, Threshold={heartbeatConfig.ThresholdMs}ms");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"ERROR: Invalid HeartbeatMonitor configuration: {ex.Message}");
+    Console.WriteLine("Using default configuration.");
+    heartbeatConfig = new HeartbeatConfig();
+    builder.Services.AddSingleton(heartbeatConfig);
+}
+
+// Register HeartbeatMonitor as hosted service and singleton for API access
+builder.Services.AddSingleton<HeartbeatLogger>();
+builder.Services.AddSingleton<HeartbeatMonitor>();
+builder.Services.AddHostedService<HeartbeatMonitor>(sp => sp.GetRequiredService<HeartbeatMonitor>());
 
 var app = builder.Build();
 
