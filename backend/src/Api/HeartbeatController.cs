@@ -171,4 +171,76 @@ public class HeartbeatController : ControllerBase
             return StatusCode(500, new { message = "Internal server error occurred" });
         }
     }
+
+    /// <summary>
+    /// Triggers a full blocking GC to test heartbeat latency detection for GC pauses.
+    /// </summary>
+    /// <returns>Confirmation message with GC pause duration.</returns>
+    [HttpPost("simulate-gc")]
+    public ActionResult SimulateGC()
+    {
+        try
+        {
+            _logger.LogInformation("Triggering full blocking GC to test latency detection");
+
+            // Allocate junk data to make GC pause longer and more noticeable
+            var junkData = new List<object>();
+            for (int i = 0; i < 1000000; i++)
+            {
+                junkData.Add(new byte[1024]); // 1KB per object = ~1GB total
+            }
+
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+            // Get GC info before
+            var memoryBefore = GC.GetTotalMemory(false);
+            var gen0Before = GC.CollectionCount(0);
+            var gen1Before = GC.CollectionCount(1);
+            var gen2Before = GC.CollectionCount(2);
+
+            // Trigger full blocking compacting GC (Stop-the-World event)
+            // This is the most aggressive GC that will cause maximum latency
+            GC.Collect(2, GCCollectionMode.Forced, blocking: true, compacting: true);
+            GC.WaitForPendingFinalizers();
+
+            stopwatch.Stop();
+
+            // Get GC info after
+            var memoryAfter = GC.GetTotalMemory(false);
+            var gen0After = GC.CollectionCount(0);
+            var gen1After = GC.CollectionCount(1);
+            var gen2After = GC.CollectionCount(2);
+
+            // Get detailed GC pause information
+            var gcInfo = GC.GetGCMemoryInfo();
+            var pauseDurations = gcInfo.PauseDurations
+                .Select(p => p.TotalMilliseconds)
+                .ToList();
+
+            _logger.LogInformation(
+                "GC simulation completed: Total={TotalMs}ms, Gen0={Gen0}, Gen1={Gen1}, Gen2={Gen2}, Pauses={Pauses}",
+                stopwatch.ElapsedMilliseconds,
+                gen0After - gen0Before,
+                gen1After - gen1Before,
+                gen2After - gen2Before,
+                string.Join(", ", pauseDurations.Select(p => $"{p:F1}ms"))
+            );
+
+            return Ok(new
+            {
+                message = "GC simulation completed",
+                totalDurationMs = stopwatch.ElapsedMilliseconds,
+                memoryFreedBytes = memoryBefore - memoryAfter,
+                gen0Collections = gen0After - gen0Before,
+                gen1Collections = gen1After - gen1Before,
+                gen2Collections = gen2After - gen2Before,
+                pauseDurationsMs = pauseDurations
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to simulate GC");
+            return StatusCode(500, new { message = "Internal server error occurred" });
+        }
+    }
 }

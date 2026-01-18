@@ -68,4 +68,11 @@ export const api = {
     });
     return response.json();
   },
+
+  async simulateHeartbeatGC() {
+    const response = await fetch(`${API_BASE_URL}/Heartbeat/simulate-gc`, {
+      method: 'POST',
+    });
+    return response.json();
+  },
 };

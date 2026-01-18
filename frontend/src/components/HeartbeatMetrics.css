@@ -109,6 +109,12 @@
   padding: 4px 0;
 }
 
+.info-item.button-group {
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
+}
+
 .info-label {
   font-size: 13px;
   color: #6b7280;
@@ -135,7 +141,6 @@
 .simulate-button {
   width: 100%;
   padding: 10px 16px;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   color: white;
   border: none;
   border-radius: 6px;
@@ -146,8 +151,22 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.simulate-button:hover:not(:disabled) {
+.simulate-button.cpu-load {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.simulate-button.cpu-load:hover:not(:disabled) {
   background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.simulate-button.gc-test {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.simulate-button.gc-test:hover:not(:disabled) {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   transform: translateY(-1px);
 }

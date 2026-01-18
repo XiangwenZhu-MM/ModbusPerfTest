@@ -8,6 +8,7 @@ const HeartbeatMetrics: React.FC = () => {
   const [metricsHistory, setMetricsHistory] = useState<HeartbeatMetricsType[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [simulating, setSimulating] = useState<boolean>(false);
+  const [simulatingGC, setSimulatingGC] = useState<boolean>(false);
 
   useEffect(() => {
     // Fetch metrics immediately
@@ -53,6 +54,19 @@ const HeartbeatMetrics: React.FC = () => {
       setError('Failed to simulate load');
     } finally {
       setSimulating(false);
+    }
+  };
+
+  const handleSimulateGC = async () => {
+    try {
+      setSimulatingGC(true);
+      await api.simulateHeartbeatGC();
+      // Metrics will update automatically via polling
+    } catch (err) {
+      console.error('Failed to simulate GC:', err);
+      setError('Failed to simulate GC');
+    } finally {
+      setSimulatingGC(false);
     }
   };
 
@@ -134,13 +148,20 @@ const HeartbeatMetrics: React.FC = () => {
           <span className="info-label">Heartbeat Interval:</span>
           <span className="info-value">{metrics.expectedIntervalMs}ms</span>
         </div>
-        <div className="info-item">
+        <div className="info-item button-group">
           <button 
-            className="simulate-button" 
+            className="simulate-button cpu-load" 
             onClick={handleSimulateLoad}
-            disabled={simulating}
+            disabled={simulating || simulatingGC}
           >
-            {simulating ? 'Simulating Load...' : '🔥 Test Latency Detection (3s CPU Load)'}
+            {simulating ? 'Simulating...' : '🔥 CPU Load Test (3s)'}
+          </button>
+          <button 
+            className="simulate-button gc-test" 
+            onClick={handleSimulateGC}
+            disabled={simulating || simulatingGC}
+          >
+            {simulatingGC ? 'Running GC...' : '🗑️ GC Pause Test'}
           </button>
         </div>
       </div>
