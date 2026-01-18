@@ -90,28 +90,51 @@ public class HeartbeatController : ControllerBase
             // Limit duration to prevent excessive load
             var actualDuration = Math.Min(durationMs, 10000);
             
-            _logger.LogInformation("Simulating CPU load for {DurationMs}ms", actualDuration);
+            _logger.LogInformation("Simulating CPU load for {DurationMs}ms across all cores", actualDuration);
 
-            // Simulate CPU-intensive work
+            // Simulate CPU-intensive work across all cores to saturate the system
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            long iterations = 0;
-            
-            while (stopwatch.ElapsedMilliseconds < actualDuration)
+            var processorCount = Environment.ProcessorCount;
+            var tasks = new Task[processorCount];
+            long totalIterations = 0;
+
+            // Spawn CPU-intensive work on all cores
+            for (int core = 0; core < processorCount; core++)
             {
-                // CPU-intensive calculation (prime number checking)
-                for (int i = 0; i < 100000; i++)
+                tasks[core] = Task.Run(() =>
                 {
-                    var _ = Math.Sqrt(i) * Math.Log(i + 1);
-                }
-                iterations++;
+                    long iterations = 0;
+                    var localStopwatch = System.Diagnostics.Stopwatch.StartNew();
+                    
+                    while (localStopwatch.ElapsedMilliseconds < actualDuration)
+                    {
+                        // CPU-intensive calculation
+                        for (int i = 0; i < 1000000; i++)
+                        {
+                            var _ = Math.Sqrt(i) * Math.Log(i + 1) * Math.Sin(i);
+                        }
+                        iterations++;
+                    }
+                    
+                    return iterations;
+                });
+            }
+
+            // Wait for all tasks to complete
+            Task.WaitAll(tasks);
+            
+            foreach (var task in tasks.Cast<Task<long>>())
+            {
+                totalIterations += task.Result;
             }
 
             stopwatch.Stop();
 
             _logger.LogInformation(
-                "CPU load simulation completed: {DurationMs}ms, {Iterations} iterations",
+                "CPU load simulation completed: {DurationMs}ms, {Cores} cores, {Iterations} total iterations",
                 stopwatch.ElapsedMilliseconds,
-                iterations
+                processorCount,
+                totalIterations
             );
 
             return Ok(new
@@ -119,7 +142,8 @@ public class HeartbeatController : ControllerBase
                 message = "CPU load simulation completed",
                 requestedDurationMs = durationMs,
                 actualDurationMs = stopwatch.ElapsedMilliseconds,
-                iterations = iterations
+                coresUsed = processorCount,
+                totalIterations = totalIterations
             });
         }
         catch (Exception ex)
