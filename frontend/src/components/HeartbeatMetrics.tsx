@@ -6,6 +6,7 @@ import './HeartbeatMetrics.css';
 const HeartbeatMetrics: React.FC = () => {
   const [metrics, setMetrics] = useState<HeartbeatMetricsType | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [simulating, setSimulating] = useState<boolean>(false);
 
   useEffect(() => {
     // Fetch metrics immediately
@@ -25,6 +26,19 @@ const HeartbeatMetrics: React.FC = () => {
     } catch (err) {
       console.error('Failed to fetch heartbeat metrics:', err);
       setError('Failed to load metrics');
+    }
+  };
+
+  const handleSimulateLoad = async () => {
+    try {
+      setSimulating(true);
+      await api.simulateHeartbeatLoad(3000); // 3 seconds of CPU load
+      // Metrics will update automatically via polling
+    } catch (err) {
+      console.error('Failed to simulate load:', err);
+      setError('Failed to simulate load');
+    } finally {
+      setSimulating(false);
     }
   };
 
@@ -105,6 +119,15 @@ const HeartbeatMetrics: React.FC = () => {
         <div className="info-item">
           <span className="info-label">Heartbeat Interval:</span>
           <span className="info-value">{metrics.expectedIntervalMs}ms</span>
+        </div>
+        <div className="info-item">
+          <button 
+            className="simulate-button" 
+            onClick={handleSimulateLoad}
+            disabled={simulating}
+          >
+            {simulating ? 'Simulating Load...' : '🔥 Test Latency Detection (3s CPU Load)'}
+          </button>
         </div>
       </div>
     </div>

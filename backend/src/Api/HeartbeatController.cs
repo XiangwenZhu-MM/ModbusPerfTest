@@ -76,4 +76,56 @@ public class HeartbeatController : ControllerBase
             return StatusCode(500, new { message = "Internal server error occurred" });
         }
     }
+
+    /// <summary>
+    /// Simulates high CPU load to test heartbeat latency detection.
+    /// </summary>
+    /// <param name="durationMs">Duration of CPU load in milliseconds (default: 3000ms, max: 10000ms).</param>
+    /// <returns>Confirmation message.</returns>
+    [HttpPost("simulate-load")]
+    public ActionResult SimulateLoad([FromQuery] int durationMs = 3000)
+    {
+        try
+        {
+            // Limit duration to prevent excessive load
+            var actualDuration = Math.Min(durationMs, 10000);
+            
+            _logger.LogInformation("Simulating CPU load for {DurationMs}ms", actualDuration);
+
+            // Simulate CPU-intensive work
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            long iterations = 0;
+            
+            while (stopwatch.ElapsedMilliseconds < actualDuration)
+            {
+                // CPU-intensive calculation (prime number checking)
+                for (int i = 0; i < 100000; i++)
+                {
+                    var _ = Math.Sqrt(i) * Math.Log(i + 1);
+                }
+                iterations++;
+            }
+
+            stopwatch.Stop();
+
+            _logger.LogInformation(
+                "CPU load simulation completed: {DurationMs}ms, {Iterations} iterations",
+                stopwatch.ElapsedMilliseconds,
+                iterations
+            );
+
+            return Ok(new
+            {
+                message = "CPU load simulation completed",
+                requestedDurationMs = durationMs,
+                actualDurationMs = stopwatch.ElapsedMilliseconds,
+                iterations = iterations
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to simulate CPU load");
+            return StatusCode(500, new { message = "Internal server error occurred" });
+        }
+    }
 }

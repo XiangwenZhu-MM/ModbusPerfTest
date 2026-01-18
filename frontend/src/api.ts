@@ -56,4 +56,11 @@ export const api = {
     const response = await fetch(`${API_BASE_URL}/Heartbeat/metrics`);
     return response.json();
   },
+
+  async simulateHeartbeatLoad(durationMs: number = 3000) {
+    const response = await fetch(`${API_BASE_URL}/Heartbeat/simulate-load?durationMs=${durationMs}`, {
+      method: 'POST',
+    });
+    return response.json();
+  },
 };
