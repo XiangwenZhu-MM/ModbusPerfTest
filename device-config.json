@@ -1,0 +1,60 @@
+{
+  "devices": [
+    {
+      "ipAddress": "127.0.0.1",
+      "port": 502,
+      "slaveId": 1,
+      "frames": [
+        {
+          "startAddress": 40001,
+          "count": 100,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "ipAddress": "127.0.0.1",
+      "port": 502,
+      "slaveId": 2,
+      "frames": [
+        {
+          "startAddress": 40001,
+          "count": 100,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "startAddress": 40101,
+          "count": 100,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "ipAddress": "127.0.0.1",
+      "port": 502,
+      "slaveId": 3,
+      "frames": [
+        {
+          "startAddress": 40001,
+          "count": 100,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "startAddress": 40101,
+          "count": 100,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "startAddress": 40201,
+          "count": 100,
+          "scanFrequencyMs": 2000
+        },
+        {
+          "startAddress": 40301,
+          "count": 100,
+          "scanFrequencyMs": 2000
+        }
+      ]
+    }
+    ]
+}

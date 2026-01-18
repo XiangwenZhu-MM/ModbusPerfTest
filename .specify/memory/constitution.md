@@ -1,50 +1,55 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# ModbusPerfTest Constitution
+
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Specification-Driven Development
+All features and changes MUST begin with a clear, testable specification. Specifications define business requirements, user stories, and measurable outcomes before implementation begins. No code is written without an approved spec.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Test-First (Non-Negotiable)
+Automated tests MUST be written before implementation. Red-Green-Refactor cycle is strictly enforced. All features and bugfixes require passing tests before merge.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Independent Deployability
+Each user story or feature must be independently testable, deployable, and deliver value on its own. No feature may introduce hidden dependencies or break existing functionality.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Observability & Transparency
+All system metrics, health indicators, and data quality states MUST be observable via dashboards or logs. Changes to data quality or system health must be visible to operators in real time.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Simplicity & Minimalism
+Favor the simplest solution that meets requirements. Avoid unnecessary complexity, over-engineering, or premature optimization. Each addition must be justified by a clear requirement.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Performance & Security Standards
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- All device-level and system-level metrics MUST be measured and displayed dynamically as specified.
+- Data quality and staleness detection MUST follow requirements for last known value, timestamp, and visual distinction.
+- System must handle connection failures, queue overflows, and saturation transparently.
+- Security: No sensitive data is logged. Network access is restricted to trusted environments for MVP.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Development Workflow & Quality Gates
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- All work begins with a feature branch and a written specification.
+- Code reviews MUST verify compliance with specification and core principles.
+- Automated tests MUST pass before merge.
+- Each user story is implemented and tested independently.
+- Amendments to the constitution require explicit version bump and documentation.
+
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+- This constitution supersedes all prior project practices.
+- Amendments require documentation, team approval, and a migration plan if breaking.
+- All PRs and reviews must verify compliance with the constitution and specification.
+- Versioning follows semantic rules: MAJOR for breaking/removal, MINOR for new principles/sections, PATCH for clarifications.
+- Compliance is reviewed at each phase gate (spec, plan, implementation, review).
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+<!--
+Sync Impact Report:
+Version change: (none) → 1.0.0
+List of modified principles: All (template → concrete)
+Added sections: Performance & Security Standards, Development Workflow & Quality Gates
+Removed sections: None
+Templates requiring updates: plan-template.md, spec-template.md, tasks-template.md (✅ already generic, no update needed)
+Follow-up TODOs: None
+-->
+
+**Version**: 1.0.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-17
