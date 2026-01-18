@@ -213,9 +213,11 @@ public class HeartbeatController : ControllerBase
 
             // Get detailed GC pause information
             var gcInfo = GC.GetGCMemoryInfo();
-            var pauseDurations = gcInfo.PauseDurations
-                .Select(p => p.TotalMilliseconds)
-                .ToList();
+            var pauseDurations = new List<double>();
+            foreach (var pause in gcInfo.PauseDurations)
+            {
+                pauseDurations.Add(pause.TotalMilliseconds);
+            }
 
             _logger.LogInformation(
                 "GC simulation completed: Total={TotalMs}ms, Gen0={Gen0}, Gen1={Gen1}, Gen2={Gen2}, Pauses={Pauses}",
