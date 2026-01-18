@@ -78,6 +78,25 @@ public class HeartbeatController : ControllerBase
     }
 
     /// <summary>
+    /// Gets the metrics history (last 10 measurements, newest first).
+    /// </summary>
+    /// <returns>List of recent heartbeat metrics.</returns>
+    [HttpGet("metrics/history")]
+    public ActionResult<IEnumerable<HeartbeatMetrics>> GetMetricsHistory()
+    {
+        try
+        {
+            var history = _heartbeatMonitor.GetMetricsHistory();
+            return Ok(history);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to retrieve heartbeat metrics history");
+            return StatusCode(500, new { message = "Internal server error occurred" });
+        }
+    }
+
+    /// <summary>
     /// Simulates high CPU load to test heartbeat latency detection.
     /// </summary>
     /// <param name="durationMs">Duration of CPU load in milliseconds (default: 3000ms, max: 10000ms).</param>

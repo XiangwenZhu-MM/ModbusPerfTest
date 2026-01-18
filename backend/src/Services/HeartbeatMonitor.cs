@@ -14,6 +14,7 @@ public class HeartbeatMonitor : BackgroundService
     private readonly ILogger<HeartbeatMonitor> _logger;
     private readonly HeartbeatLogger _heartbeatLogger;
     private readonly ConcurrentQueue<DriftEvent> _recentWarnings = new();
+    private readonly ConcurrentQueue<HeartbeatMetrics> _metricsHistory = new();
     
     // Current metrics (protected by lock)
     private readonly object _metricsLock = new();
@@ -61,6 +62,14 @@ public class HeartbeatMonitor : BackgroundService
                 ClockDriftMs = Math.Abs(_lastMonoElapsedMs - _lastWallElapsedMs)
             };
         }
+    }
+
+    /// <summary>
+    /// Gets the metrics history (last 10 measurements, newest first).
+    /// </summary>
+    public IEnumerable<HeartbeatMetrics> GetMetricsHistory()
+    {
+        return _metricsHistory.Reverse();
     }
 
     /// <summary>
@@ -132,6 +141,25 @@ public class HeartbeatMonitor : BackgroundService
             _lastMonoElapsedMs = monoMs;
             _lastWallElapsedMs = wallMs;
             _lastCheckedAt = timestamp;
+        }
+
+        // Store metrics in history (bounded to 10 entries)
+        var metricsSnapshot = new HeartbeatMetrics
+        {
+            LastMonoElapsedMs = monoMs,
+            LastWallElapsedMs = wallMs,
+            LastCheckedAt = timestamp,
+            ExpectedIntervalMs = _config.IntervalMs,
+            LatencyMs = Math.Max(0, monoMs - _config.IntervalMs),
+            ClockDriftMs = Math.Abs(monoMs - wallMs)
+        };
+
+        _metricsHistory.Enqueue(metricsSnapshot);
+        
+        // Maintain bounded history size (keep last 10)
+        while (_metricsHistory.Count > 10)
+        {
+            _metricsHistory.TryDequeue(out _);
         }
         
         // Detection 1: Internal Latency (Process/OS Stall)

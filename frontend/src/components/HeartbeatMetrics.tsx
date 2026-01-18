@@ -5,15 +5,20 @@ import './HeartbeatMetrics.css';
 
 const HeartbeatMetrics: React.FC = () => {
   const [metrics, setMetrics] = useState<HeartbeatMetricsType | null>(null);
+  const [metricsHistory, setMetricsHistory] = useState<HeartbeatMetricsType[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [simulating, setSimulating] = useState<boolean>(false);
 
   useEffect(() => {
     // Fetch metrics immediately
     fetchMetrics();
+    fetchMetricsHistory();
 
     // Poll every 1 second for real-time updates
-    const interval = setInterval(fetchMetrics, 1000);
+    const interval = setInterval(() => {
+      fetchMetrics();
+      fetchMetricsHistory();
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
@@ -26,6 +31,15 @@ const HeartbeatMetrics: React.FC = () => {
     } catch (err) {
       console.error('Failed to fetch heartbeat metrics:', err);
       setError('Failed to load metrics');
+    }
+  };
+
+  const fetchMetricsHistory = async () => {
+    try {
+      const data = await api.getHeartbeatMetricsHistory();
+      setMetricsHistory(data);
+    } catch (err) {
+      console.error('Failed to fetch heartbeat metrics history:', err);
     }
   };
 
@@ -130,6 +144,27 @@ const HeartbeatMetrics: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {metricsHistory.length > 0 && (
+        <div className="metrics-history">
+          <h4>Recent Measurements (Last 10)</h4>
+          <div className="history-list">
+            {metricsHistory.map((entry, index) => (
+              <div key={index} className="history-item">
+                <div className="history-time">{formatTimestamp(entry.lastCheckedAt)}</div>
+                <div className="history-values">
+                  <span className={`history-value ${entry.latencyMs > 0 ? 'alert' : ''}`}>
+                    Latency: {entry.latencyMs}ms
+                  </span>
+                  <span className={`history-value ${entry.clockDriftMs > 500 ? 'alert' : ''}`}>
+                    Drift: {entry.clockDriftMs.toFixed(1)}ms
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
