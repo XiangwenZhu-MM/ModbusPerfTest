@@ -210,46 +210,44 @@ const DeviceMetricsPanel: React.FC = () => {
                   );
                 });
 
-                // Add device summary row if there are multiple frames
-                if (frames.length > 1) {
-                  const sumLatestQueue = frames.reduce((sum, fm) => sum + fm.latest.queueDurationMs, 0);
-                  const sumLatestResponse = frames.reduce((sum, fm) => sum + fm.latest.deviceResponseTimeMs, 0);
-                  const sumLatestTotal = frames.reduce((sum, fm) => sum + fm.latest.actualSamplingIntervalMs, 0);
-                  const sumMeanQueue = frames.reduce((sum, fm) => sum + fm.mean.queueDurationMs, 0);
-                  const sumMeanResponse = frames.reduce((sum, fm) => sum + fm.mean.deviceResponseTimeMs, 0);
-                  const sumMeanTotal = frames.reduce((sum, fm) => sum + fm.mean.actualSamplingIntervalMs, 0);
-                  const totalDropped = frames.reduce((sum, fm) => sum + fm.droppedCount, 0);
-                  const totalDroppedTPM = frames.reduce((sum, fm) => sum + fm.droppedTPM, 0);
+                // Add device summary row for all devices
+                const sumLatestQueue = frames.reduce((sum, fm) => sum + fm.latest.queueDurationMs, 0);
+                const sumLatestResponse = frames.reduce((sum, fm) => sum + fm.latest.deviceResponseTimeMs, 0);
+                const sumLatestTotal = frames.reduce((sum, fm) => sum + fm.latest.actualSamplingIntervalMs, 0);
+                const sumMeanQueue = frames.reduce((sum, fm) => sum + fm.mean.queueDurationMs, 0);
+                const sumMeanResponse = frames.reduce((sum, fm) => sum + fm.mean.deviceResponseTimeMs, 0);
+                const sumMeanTotal = frames.reduce((sum, fm) => sum + fm.mean.actualSamplingIntervalMs, 0);
+                const totalDropped = frames.reduce((sum, fm) => sum + fm.droppedCount, 0);
+                const totalDroppedTPM = frames.reduce((sum, fm) => sum + fm.droppedTPM, 0);
 
-                  // Device-level metrics
-                  const maxQueueDuration = Math.max(...frames.map(fm => fm.mean.queueDurationMs));
-                  const avgDeviceResponseTime = frames.reduce((sum, fm) => sum + fm.mean.deviceResponseTimeMs, 0) / frames.length;
-                  const channelUtilization = frames.reduce((sum, fm) => sum + ((fm.mean.deviceResponseTimeMs / fm.scanFrequencyMs) * 100), 0);
+                // Device-level metrics
+                const maxQueueDuration = Math.max(...frames.map(fm => fm.mean.queueDurationMs));
+                const avgDeviceResponseTime = frames.reduce((sum, fm) => sum + fm.mean.deviceResponseTimeMs, 0) / frames.length;
+                const channelUtilization = frames.reduce((sum, fm) => sum + ((fm.mean.deviceResponseTimeMs / fm.scanFrequencyMs) * 100), 0);
 
-                  // Device-level metrics row
-                  rows.push(
-                    <tr key={`${deviceKey}-metrics`} style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold', color: '#333' }}>
-                      <td>{frames[0].ipAddress}</td>
-                      <td>{frames[0].port}</td>
-                      <td>{frames[0].slaveId}</td>
-                      <td colSpan={2} style={{ fontSize: '0.9em' }}>
-                        <strong>DEVICE ({frames.length} frames)</strong>
-                      </td>
-                      <td colSpan={2} title="Worst-case delay for any tag">
-                        Max Queue: <strong>{maxQueueDuration.toFixed(0)}ms</strong>
-                      </td>
-                      <td colSpan={2} title="Average physical speed of network/PLC">
-                        Avg Resp: <strong>{avgDeviceResponseTime.toFixed(0)}ms</strong>
-                      </td>
-                      <td colSpan={2} title="Sum of frame utilizations - channel saturation" style={{ color: channelUtilization >= 100 ? 'red' : channelUtilization >= 80 ? 'orange' : 'inherit' }}>
-                        Ch. Util: <strong>{channelUtilization.toFixed(1)}%</strong>
-                      </td>
-                      <td colSpan={2} title="Total dropped tasks across all frames" style={{ color: totalDropped > 0 ? 'red' : 'inherit' }}>
-                        Total Drops: <strong>{totalDropped}</strong>
-                      </td>
-                    </tr>
-                  );
-                }
+                // Device-level metrics row
+                rows.push(
+                  <tr key={`${deviceKey}-metrics`} style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold', color: '#333' }}>
+                    <td>{frames[0].ipAddress}</td>
+                    <td>{frames[0].port}</td>
+                    <td>{frames[0].slaveId}</td>
+                    <td colSpan={2} style={{ fontSize: '0.9em' }}>
+                      <strong>DEVICE ({frames.length} frame{frames.length > 1 ? 's' : ''})</strong>
+                    </td>
+                    <td colSpan={2} title="Worst-case delay for any tag">
+                      Max Queue: <strong>{maxQueueDuration.toFixed(0)}ms</strong>
+                    </td>
+                    <td colSpan={2} title="Average physical speed of network/PLC">
+                      Avg Resp: <strong>{avgDeviceResponseTime.toFixed(0)}ms</strong>
+                    </td>
+                    <td colSpan={2} title="Sum of frame utilizations - channel saturation" style={{ color: channelUtilization >= 100 ? 'red' : channelUtilization >= 80 ? 'orange' : 'inherit' }}>
+                      Ch. Util: <strong>{channelUtilization.toFixed(1)}%</strong>
+                    </td>
+                    <td colSpan={2} title="Total dropped tasks across all frames" style={{ color: totalDropped > 0 ? 'red' : 'inherit' }}>
+                      Total Drops: <strong>{totalDropped}</strong>
+                    </td>
+                  </tr>
+                );
               });
 
               return rows;
