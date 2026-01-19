@@ -1,0 +1,241 @@
+.heartbeat-metrics {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.heartbeat-metrics h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 18px;
+  color: #f9fafb;
+}
+
+.status-indicator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.status-indicator.healthy {
+  background-color: #d1fae5;
+  border-left: 4px solid #10b981;
+  color: #065f46;
+}
+
+.status-indicator.warning-latency {
+  background-color: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  color: #92400e;
+}
+
+.status-indicator.warning-drift {
+  background-color: #fee2e2;
+  border-left: 4px solid #ef4444;
+  color: #991b1b;
+}
+
+.status-indicator.critical {
+  background-color: #fce7f3;
+  border-left: 4px solid #dc2626;
+  color: #831843;
+}
+
+.status-label {
+  font-size: 16px;
+}
+
+.status-time {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.metric-item {
+  background-color: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.metric-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.metric-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #f9fafb;
+  margin-bottom: 4px;
+}
+
+.metric-value.alert {
+  color: #dc2626;
+}
+
+.metric-detail {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.metrics-info {
+  background-color: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.info-item.button-group {
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.info-label {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.info-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.error-message,
+.loading {
+  padding: 12px;
+  text-align: center;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.error-message {
+  color: #dc2626;
+}
+
+.simulate-button {
+  width: 100%;
+  padding: 10px 16px;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.simulate-button.cpu-load {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.simulate-button.cpu-load:hover:not(:disabled) {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.simulate-button.gc-test {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.simulate-button.gc-test:hover:not(:disabled) {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.simulate-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.simulate-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.metrics-history {
+  margin-top: 16px;
+}
+
+.metrics-history h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.history-list {
+  background-color: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #4b5563;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-item:hover {
+  background-color: #4b5563;
+}
+
+.history-time {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ca3af;
+  min-width: 100px;
+}
+
+.history-values {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+}
+
+.history-value {
+  color: #f9fafb;
+  font-weight: 500;
+}
+
+.history-value.alert {
+  color: #dc2626;
+  font-weight: 700;
+}

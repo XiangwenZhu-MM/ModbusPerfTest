@@ -1,0 +1,207 @@
+openapi: 3.0.3
+info:
+  title: Heartbeat Monitor API
+  description: REST API for retrieving system health warnings from the diagnostic heartbeat monitor
+  version: 1.0.0
+  contact:
+    name: ModbusPerfTest Team
+
+servers:
+  - url: http://localhost:5000
+    description: Local development backend
+
+paths:
+  /api/heartbeat/warnings:
+    get:
+      summary: Get recent heartbeat warnings
+      description: |
+        Retrieves the most recent heartbeat warnings (internal latency and system drift events).
+        Warnings are returned in reverse chronological order (newest first).
+        Maximum number of warnings returned is controlled by server configuration (default 50).
+      operationId: getHeartbeatWarnings
+      tags:
+        - Heartbeat
+      responses:
+        '200':
+          description: Successfully retrieved warnings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DriftEvent'
+                maxItems: 1000
+              examples:
+                mixed-warnings:
+                  summary: Example with both warning types
+                  value:
+                    - eventType: CLOCK_SHIFT
+                      timestamp: "2026-01-18T14:23:45.123Z"
+                      monoElapsedMs: 1002
+                      wallElapsedMs: 1523.4
+                      expectedIntervalMs: 1000
+                      deviationMs: 521.4
+                      message: "System clock changed externally. Mono: 1002ms vs Wall: 1523.4ms"
+                    - eventType: PERFORMANCE_DEGRADED
+                      timestamp: "2026-01-18T14:22:30.456Z"
+                      monoElapsedMs: 2345
+                      wallElapsedMs: 2347.2
+                      expectedIntervalMs: 1000
+                      deviationMs: 1345
+                      message: "Expected 1000ms, took 2345ms (Potential CPU/GC spike)"
+                empty-warnings:
+                  summary: No warnings (healthy system)
+                  value: []
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/heartbeat/config:
+    get:
+      summary: Get heartbeat monitor configuration
+      description: |
+        Retrieves the current configuration of the heartbeat monitor.
+        Useful for understanding thresholds and intervals in the UI.
+      operationId: getHeartbeatConfig
+      tags:
+        - Heartbeat
+      responses:
+        '200':
+          description: Successfully retrieved configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HeartbeatConfig'
+              example:
+                enabled: true
+                intervalMs: 1000
+                thresholdMs: 2000
+                maxWarningsInMemory: 50
+                logFilePath: "logs/heartbeat-warnings.log"
+                maxLogFileSizeMB: 10
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    DriftEvent:
+      type: object
+      required:
+        - eventType
+        - timestamp
+        - monoElapsedMs
+        - wallElapsedMs
+        - expectedIntervalMs
+        - deviationMs
+        - message
+      properties:
+        eventType:
+          type: string
+          enum:
+            - PERFORMANCE_DEGRADED
+            - CLOCK_SHIFT
+          description: Type of drift detected (internal latency or system clock change)
+          example: PERFORMANCE_DEGRADED
+        timestamp:
+          type: string
+          format: date-time
+          description: UTC timestamp when the event was detected (ISO 8601 format)
+          example: "2026-01-18T14:23:45.123Z"
+        monoElapsedMs:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Elapsed time measured by monotonic timer (Stopwatch) in milliseconds
+          example: 2345
+        wallElapsedMs:
+          type: number
+          format: double
+          minimum: 0
+          description: Elapsed time measured by system wall clock (DateTime.UtcNow) in milliseconds
+          example: 2347.2
+        expectedIntervalMs:
+          type: integer
+          minimum: 100
+          maximum: 60000
+          description: Configured heartbeat interval in milliseconds
+          example: 1000
+        deviationMs:
+          type: number
+          format: double
+          description: |
+            Magnitude of deviation in milliseconds.
+            For PERFORMANCE_DEGRADED: monoElapsedMs - expectedIntervalMs
+            For CLOCK_SHIFT: abs(monoElapsedMs - wallElapsedMs)
+          example: 1345
+        message:
+          type: string
+          maxLength: 500
+          description: Human-readable description of the drift event
+          example: "Expected 1000ms, took 2345ms (Potential CPU/GC spike)"
+
+    HeartbeatConfig:
+      type: object
+      required:
+        - enabled
+        - intervalMs
+        - thresholdMs
+        - maxWarningsInMemory
+        - logFilePath
+        - maxLogFileSizeMB
+      properties:
+        enabled:
+          type: boolean
+          description: Whether heartbeat monitoring is currently active
+          example: true
+        intervalMs:
+          type: integer
+          minimum: 100
+          maximum: 60000
+          description: Milliseconds between heartbeat pulses
+          example: 1000
+        thresholdMs:
+          type: integer
+          minimum: 100
+          description: Deviation threshold for triggering warnings (must be >= intervalMs)
+          example: 2000
+        maxWarningsInMemory:
+          type: integer
+          minimum: 10
+          maximum: 1000
+          description: Maximum number of warnings retained in memory for API retrieval
+          example: 50
+        logFilePath:
+          type: string
+          minLength: 1
+          description: Path to the warning log file
+          example: "logs/heartbeat-warnings.log"
+        maxLogFileSizeMB:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          description: Maximum log file size in megabytes before rotation
+          example: 10
+
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Error description
+          example: "Internal server error occurred"
+        details:
+          type: string
+          description: Additional error details (optional)
+
+tags:
+  - name: Heartbeat
+    description: Endpoints for diagnostic heartbeat monitoring and system health warnings

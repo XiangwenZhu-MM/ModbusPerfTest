@@ -1,0 +1,2007 @@
+{
+  "devices": [
+    {
+      "name": "Port1",
+      "ipAddress": "localhost",
+      "port": 501,
+      "slaveId": 1,
+      "allowConcurrentFrameReads": true,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port2",
+      "ipAddress": "localhost",
+      "port": 502,
+      "slaveId": 1,
+      "allowConcurrentFrameReads": true,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port3",
+      "ipAddress": "localhost",
+      "port": 503,
+      "slaveId": 1,
+      "allowConcurrentFrameReads": true,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port4",
+      "ipAddress": "localhost",
+      "port": 504,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port5",
+      "ipAddress": "localhost",
+      "port": 505,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port6",
+      "ipAddress": "localhost",
+      "port": 506,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port7",
+      "ipAddress": "localhost",
+      "port": 507,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port8",
+      "ipAddress": "localhost",
+      "port": 508,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port9",
+      "ipAddress": "localhost",
+      "port": 509,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port10",
+      "ipAddress": "localhost",
+      "port": 510,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port11",
+      "ipAddress": "localhost",
+      "port": 511,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port12",
+      "ipAddress": "localhost",
+      "port": 512,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port13",
+      "ipAddress": "localhost",
+      "port": 513,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port14",
+      "ipAddress": "localhost",
+      "port": 514,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port15",
+      "ipAddress": "localhost",
+      "port": 515,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port16",
+      "ipAddress": "localhost",
+      "port": 516,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port17",
+      "ipAddress": "localhost",
+      "port": 517,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port18",
+      "ipAddress": "localhost",
+      "port": 518,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port19",
+      "ipAddress": "localhost",
+      "port": 519,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port20",
+      "ipAddress": "localhost",
+      "port": 520,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port21",
+      "ipAddress": "localhost",
+      "port": 521,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port22",
+      "ipAddress": "localhost",
+      "port": 522,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port23",
+      "ipAddress": "localhost",
+      "port": 523,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port24",
+      "ipAddress": "localhost",
+      "port": 524,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port25",
+      "ipAddress": "localhost",
+      "port": 525,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port26",
+      "ipAddress": "localhost",
+      "port": 526,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port27",
+      "ipAddress": "localhost",
+      "port": 527,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port28",
+      "ipAddress": "localhost",
+      "port": 528,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port29",
+      "ipAddress": "localhost",
+      "port": 529,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port30",
+      "ipAddress": "localhost",
+      "port": 530,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port31",
+      "ipAddress": "localhost",
+      "port": 531,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port32",
+      "ipAddress": "localhost",
+      "port": 532,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port33",
+      "ipAddress": "localhost",
+      "port": 533,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port34",
+      "ipAddress": "localhost",
+      "port": 534,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port35",
+      "ipAddress": "localhost",
+      "port": 535,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port36",
+      "ipAddress": "localhost",
+      "port": 536,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port37",
+      "ipAddress": "localhost",
+      "port": 537,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port38",
+      "ipAddress": "localhost",
+      "port": 538,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port39",
+      "ipAddress": "localhost",
+      "port": 539,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port40",
+      "ipAddress": "localhost",
+      "port": 540,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port41",
+      "ipAddress": "localhost",
+      "port": 541,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port42",
+      "ipAddress": "localhost",
+      "port": 542,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port43",
+      "ipAddress": "localhost",
+      "port": 543,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port44",
+      "ipAddress": "localhost",
+      "port": 544,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port45",
+      "ipAddress": "localhost",
+      "port": 545,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port46",
+      "ipAddress": "localhost",
+      "port": 546,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port47",
+      "ipAddress": "localhost",
+      "port": 547,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port48",
+      "ipAddress": "localhost",
+      "port": 548,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port49",
+      "ipAddress": "localhost",
+      "port": 549,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port50",
+      "ipAddress": "localhost",
+      "port": 550,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port51",
+      "ipAddress": "localhost",
+      "port": 551,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port52",
+      "ipAddress": "localhost",
+      "port": 552,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port53",
+      "ipAddress": "localhost",
+      "port": 553,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port54",
+      "ipAddress": "localhost",
+      "port": 554,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port55",
+      "ipAddress": "localhost",
+      "port": 555,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port56",
+      "ipAddress": "localhost",
+      "port": 556,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port57",
+      "ipAddress": "localhost",
+      "port": 557,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port58",
+      "ipAddress": "localhost",
+      "port": 558,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port59",
+      "ipAddress": "localhost",
+      "port": 559,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port60",
+      "ipAddress": "localhost",
+      "port": 560,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port61",
+      "ipAddress": "localhost",
+      "port": 561,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port62",
+      "ipAddress": "localhost",
+      "port": 562,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port63",
+      "ipAddress": "localhost",
+      "port": 563,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port64",
+      "ipAddress": "localhost",
+      "port": 564,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port65",
+      "ipAddress": "localhost",
+      "port": 565,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port66",
+      "ipAddress": "localhost",
+      "port": 566,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port67",
+      "ipAddress": "localhost",
+      "port": 567,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port68",
+      "ipAddress": "localhost",
+      "port": 568,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port69",
+      "ipAddress": "localhost",
+      "port": 569,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port70",
+      "ipAddress": "localhost",
+      "port": 570,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port71",
+      "ipAddress": "localhost",
+      "port": 571,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port72",
+      "ipAddress": "localhost",
+      "port": 572,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port73",
+      "ipAddress": "localhost",
+      "port": 573,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port74",
+      "ipAddress": "localhost",
+      "port": 574,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port75",
+      "ipAddress": "localhost",
+      "port": 575,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port76",
+      "ipAddress": "localhost",
+      "port": 576,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port77",
+      "ipAddress": "localhost",
+      "port": 577,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port78",
+      "ipAddress": "localhost",
+      "port": 578,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port79",
+      "ipAddress": "localhost",
+      "port": 579,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port80",
+      "ipAddress": "localhost",
+      "port": 580,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port81",
+      "ipAddress": "localhost",
+      "port": 581,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port82",
+      "ipAddress": "localhost",
+      "port": 582,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port83",
+      "ipAddress": "localhost",
+      "port": 583,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port84",
+      "ipAddress": "localhost",
+      "port": 584,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port85",
+      "ipAddress": "localhost",
+      "port": 585,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port86",
+      "ipAddress": "localhost",
+      "port": 586,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port87",
+      "ipAddress": "localhost",
+      "port": 587,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port88",
+      "ipAddress": "localhost",
+      "port": 588,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port89",
+      "ipAddress": "localhost",
+      "port": 589,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port90",
+      "ipAddress": "localhost",
+      "port": 590,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port91",
+      "ipAddress": "localhost",
+      "port": 591,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port92",
+      "ipAddress": "localhost",
+      "port": 592,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port93",
+      "ipAddress": "localhost",
+      "port": 593,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port94",
+      "ipAddress": "localhost",
+      "port": 594,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port95",
+      "ipAddress": "localhost",
+      "port": 595,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port96",
+      "ipAddress": "localhost",
+      "port": 596,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port97",
+      "ipAddress": "localhost",
+      "port": 597,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port98",
+      "ipAddress": "localhost",
+      "port": 598,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port99",
+      "ipAddress": "localhost",
+      "port": 599,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    },
+    {
+      "name": "Port100",
+      "ipAddress": "localhost",
+      "port": 600,
+      "slaveId": 1,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    }
+  ]
+}
