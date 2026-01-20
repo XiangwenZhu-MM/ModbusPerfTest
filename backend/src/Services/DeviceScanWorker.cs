@@ -16,7 +16,7 @@ public class DeviceScanWorker
     private readonly bool _allowConcurrentFrameReads;
     private readonly SemaphoreSlim _deviceLock = new(1, 1);
     private CancellationTokenSource? _cts;
-    private Task? _workerTask;
+    private List<Task>? _workerTasks;
 
     public DeviceScanWorker(
         string deviceId,
@@ -46,15 +46,24 @@ public class DeviceScanWorker
     public void Start()
     {
         _cts = new CancellationTokenSource();
-        _workerTask = Task.Run(() => WorkerLoop(_cts.Token));
+        
+        // If concurrent frame reads are enabled, start multiple workers (one per frame)
+        // Otherwise, start a single worker for sequential processing
+        int workerCount = _allowConcurrentFrameReads ? _config.Frames.Count : 1;
+        _workerTasks = new List<Task>();
+        
+        for (int i = 0; i < workerCount; i++)
+        {
+            _workerTasks.Add(Task.Run(() => WorkerLoop(_cts.Token)));
+        }
     }
 
     public async Task StopAsync()
     {
         _cts?.Cancel();
-        if (_workerTask != null)
+        if (_workerTasks != null)
         {
-            await _workerTask;
+            await Task.WhenAll(_workerTasks);
         }
     }
 
