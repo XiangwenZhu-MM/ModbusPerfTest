@@ -1,3 +1,12 @@
+// Register ScadaHealthMonitor
+builder.Services.AddSingleton<ScadaHealthMonitor>(sp =>
+{
+    var logger = sp.GetRequiredService<ILogger<ScadaHealthMonitor>>();
+    var config = sp.GetRequiredService<IConfiguration>();
+    int alertThreshold = config.GetValue<int>("ThreadPoolMonitor:AlertThreshold", 10);
+    int intervalMs = config.GetValue<int>("ThreadPoolMonitor:IntervalMs", 1000);
+    return new ScadaHealthMonitor(logger, alertThreshold, intervalMs);
+});
 using ModbusPerfTest.Backend.Services;
 using ModbusPerfTest.Backend.Models;
 
@@ -69,7 +78,12 @@ builder.Services.AddSingleton<HeartbeatLogger>();
 builder.Services.AddSingleton<HeartbeatMonitor>();
 builder.Services.AddHostedService<HeartbeatMonitor>(sp => sp.GetRequiredService<HeartbeatMonitor>());
 
+
 var app = builder.Build();
+
+// Start thread pool health monitor
+var healthMonitor = app.Services.GetRequiredService<ScadaHealthMonitor>();
+healthMonitor.Start();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
