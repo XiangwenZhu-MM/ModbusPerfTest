@@ -99,7 +99,7 @@ const DeviceMetricsPanel: React.FC = () => {
     <div className="panel">
       <h2>Device-Level Metrics</h2>
 
-      <div className="metrics-table">
+      <div className="metrics-table" style={{ maxHeight: '1500px', overflowY: 'auto' }}>
         <h3>Frame Metrics (Latest & Mean)</h3>
         <table>
           <thead>

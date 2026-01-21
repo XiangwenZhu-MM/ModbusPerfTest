@@ -61,8 +61,8 @@ public class DataPointBuffer : IHostedService, IDisposable
         {
             var batch = new List<ushort>();
             
-            // Dequeue up to batchSize items
-            while (batch.Count < _batchSize && _queue.TryDequeue(out var item))
+            // Dequeue ALL available items (no limit) for high-throughput scenarios
+            while (_queue.TryDequeue(out var item))
             {
                 batch.Add(item.Value);
             }

@@ -2,7 +2,8 @@ import React from 'react';
 import './App.css';
 import DeviceMetricsPanel from './components/DeviceMetricsPanel';
 import SystemHealthPanel from './components/SystemHealthPanel';
-import DataQualityPanel from './components/DataQualityPanel';
+import ThreadPoolPanel from './components/ThreadPoolPanel';
+// import DataQualityPanel from './components/DataQualityPanel';
 
 function App() {
   return (
@@ -15,7 +16,8 @@ function App() {
       <main className="dashboard">
         <DeviceMetricsPanel />
         <SystemHealthPanel />
-        <DataQualityPanel />
+        <ThreadPoolPanel />
+        {/* <DataQualityPanel /> */}
       </main>
       
       <footer className="App-footer">

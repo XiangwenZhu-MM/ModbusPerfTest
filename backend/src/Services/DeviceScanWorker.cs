@@ -7,7 +7,7 @@ public class DeviceScanWorker
     private readonly string _deviceId;
     private readonly DeviceConfig _config;
     private readonly IModbusDriver _driver;
-    private readonly ScanTaskQueue _taskQueue;
+    private readonly List<ScanTaskQueue> _frameQueues; // One queue per frame (or single shared queue)
     private readonly ScanTaskQueue _globalQueue; // For metrics only
     private readonly MetricCollector _metricCollector;
     private readonly ClockDriftService _clockDriftService;
@@ -32,16 +32,41 @@ public class DeviceScanWorker
         _deviceId = deviceId;
         _config = config;
         _driver = driver;
-        _taskQueue = taskQueue;
         _globalQueue = globalQueue;
         _metricCollector = metricCollector;
         _clockDriftService = clockDriftService;
         _dataQualityService = dataQualityService;
         _dataPointBuffer = dataPointBuffer;
         _allowConcurrentFrameReads = config.AllowConcurrentFrameReads;
+        
+        // Create per-frame queues if concurrent reads enabled, otherwise use single shared queue
+        _frameQueues = new List<ScanTaskQueue>();
+        if (_allowConcurrentFrameReads)
+        {
+            // One queue per frame for true concurrency
+            for (int i = 0; i < config.Frames.Count; i++)
+            {
+                _frameQueues.Add(new ScanTaskQueue());
+            }
+        }
+        else
+        {
+            // Single queue for sequential processing
+            _frameQueues.Add(taskQueue);
+        }
     }
 
-    public ScanTaskQueue TaskQueue => _taskQueue;
+    public ScanTaskQueue TaskQueue => _frameQueues[0]; // For backward compatibility
+    
+    public ScanTaskQueue GetQueueForFrame(int frameIndex)
+    {
+        return _allowConcurrentFrameReads ? _frameQueues[frameIndex] : _frameQueues[0];
+    }
+    
+    public IReadOnlyList<ScanTaskQueue> GetAllQueues()
+    {
+        return _frameQueues.AsReadOnly();
+    }
 
     public void Start()
     {
@@ -54,7 +79,9 @@ public class DeviceScanWorker
         
         for (int i = 0; i < workerCount; i++)
         {
-            _workerTasks.Add(Task.Run(() => WorkerLoop(_cts.Token)));
+            int workerIndex = i; // Capture for closure
+            var queue = _frameQueues[workerIndex];
+            _workerTasks.Add(WorkerLoop(queue, _cts.Token));
         }
     }
 
@@ -67,13 +94,13 @@ public class DeviceScanWorker
         }
     }
 
-    private async Task WorkerLoop(CancellationToken cancellationToken)
+    private async Task WorkerLoop(ScanTaskQueue queue, CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested)
         {
             try
             {
-                var task = await _taskQueue.DequeueAsync(cancellationToken);
+                var task = await queue.DequeueAsync(cancellationToken);
                 if (task == null)
                     continue;
 

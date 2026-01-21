@@ -10,6 +10,7 @@ public class DataPointRepository : IDisposable
     {
         _connectionString = $"Data Source={dbPath}";
         InitializeDatabase();
+        EnableWalMode();
     }
 
     private void InitializeDatabase()
@@ -27,6 +28,15 @@ public class DataPointRepository : IDisposable
             
             CREATE INDEX IF NOT EXISTS IX_DataPoints_Timestamp ON DataPoints(Timestamp);
         ";
+        command.ExecuteNonQuery();
+    }
+
+    private void EnableWalMode()
+    {
+        using var connection = new SqliteConnection(_connectionString);
+        connection.Open();
+        using var command = connection.CreateCommand();
+        command.CommandText = "PRAGMA journal_mode=WAL;";
         command.ExecuteNonQuery();
     }
 
@@ -50,26 +60,43 @@ public class DataPointRepository : IDisposable
         if (values == null || values.Length == 0) return;
 
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        
-        using var connection = new SqliteConnection(_connectionString);
-        await connection.OpenAsync();
+        int maxVariables = 999; // SQLite default
+        int chunkSize = maxVariables; // 1 variable per value
+        int maxRetries = 5;
+        int delayMs = 100;
 
-        using var transaction = connection.BeginTransaction();
-        
-        // Build single INSERT with multiple VALUES for better performance
-        var valuePlaceholders = string.Join(",", values.Select((_, i) => $"({timestamp}, $v{i})"));
-        var sql = $"INSERT INTO DataPoints (Timestamp, Value) VALUES {valuePlaceholders}";
-        
-        var command = connection.CreateCommand();
-        command.CommandText = sql;
-        
-        for (int i = 0; i < values.Length; i++)
+        for (int attempt = 0; attempt < maxRetries; attempt++)
         {
-            command.Parameters.AddWithValue($"$v{i}", values[i]);
-        }
+            try
+            {
+                using var connection = new SqliteConnection(_connectionString);
+                await connection.OpenAsync();
+                using var transaction = connection.BeginTransaction();
 
-        await command.ExecuteNonQueryAsync();
-        await transaction.CommitAsync();
+                for (int offset = 0; offset < values.Length; offset += chunkSize)
+                {
+                    var chunk = values.Skip(offset).Take(chunkSize).ToArray();
+                    var valuePlaceholders = string.Join(",", chunk.Select((_, i) => $"({timestamp}, $v{i})"));
+                    var sql = $"INSERT INTO DataPoints (Timestamp, Value) VALUES {valuePlaceholders}";
+                    var command = connection.CreateCommand();
+                    command.CommandText = sql;
+                    for (int i = 0; i < chunk.Length; i++)
+                    {
+                        command.Parameters.AddWithValue($"$v{i}", chunk[i]);
+                    }
+                    await command.ExecuteNonQueryAsync();
+                }
+
+                await transaction.CommitAsync();
+                return;
+            }
+            catch (SqliteException ex) when (ex.SqliteErrorCode == 5) // SQLITE_BUSY (database is locked)
+            {
+                if (attempt == maxRetries - 1) throw;
+                await Task.Delay(delayMs);
+                delayMs *= 2; // Exponential backoff
+            }
+        }
     }
 
     public async Task<DataPointCountsResult> GetDataPointCountsAsync()

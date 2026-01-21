@@ -61,13 +61,14 @@ namespace ModbusPerfTest.Backend.Services
         public void Start()
         {
             _cts = new CancellationTokenSource();
-            _monitorTask = Task.Run(() => MonitorLoop(_cts.Token));
+            _monitorTask = MonitorLoop(_cts.Token);
         }
 
-        public void Stop()
+        public async Task StopAsync()
         {
             _cts?.Cancel();
-            _monitorTask?.Wait();
+            if (_monitorTask != null)
+                await _monitorTask;
         }
 
         private async Task MonitorLoop(CancellationToken token)

@@ -102,7 +102,7 @@ public class HeartbeatController : ControllerBase
     /// <param name="durationMs">Duration of CPU load in milliseconds (default: 3000ms, max: 10000ms).</param>
     /// <returns>Confirmation message.</returns>
     [HttpPost("simulate-load")]
-    public ActionResult SimulateLoad([FromQuery] int durationMs = 3000)
+    public async Task<ActionResult> SimulateLoad([FromQuery] int durationMs = 3000)
     {
         try
         {
@@ -140,11 +140,11 @@ public class HeartbeatController : ControllerBase
             }
 
             // Wait for all tasks to complete
-            Task.WaitAll(tasks);
+            var results = await Task.WhenAll(tasks.Cast<Task<long>>());
             
-            foreach (var task in tasks.Cast<Task<long>>())
+            foreach (var result in results)
             {
-                totalIterations += task.Result;
+                totalIterations += result;
             }
 
             stopwatch.Stop();

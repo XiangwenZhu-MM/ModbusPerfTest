@@ -64,6 +64,14 @@ export interface HeartbeatConfig {
   maxLogFileSizeMB: number;
 }
 
+export interface ThreadPoolMetrics {
+  workerThreads: number;
+  completionPortThreads: number;
+  pendingWorkItems: number;
+  minWorkerThreads: number;
+  maxWorkerThreads: number;
+}
+
 export interface HeartbeatMetrics {
   lastMonoElapsedMs: number;
   lastWallElapsedMs: number;

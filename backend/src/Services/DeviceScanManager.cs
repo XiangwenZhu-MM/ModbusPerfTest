@@ -145,10 +145,11 @@ public class DeviceScanManager
 
         _metricCollector.RecordTaskCreated();
         
-        // Get the device-specific queue
-        if (_deviceQueues.TryGetValue(deviceId, out var deviceQueue))
+        // Get the frame-specific queue (or shared queue if concurrent reads disabled)
+        if (_workers.TryGetValue(deviceId, out var worker))
         {
-            if (!deviceQueue.TryEnqueue(task))
+            var queue = worker.GetQueueForFrame(frameIndex);
+            if (!queue.TryEnqueue(task))
             {
                 // Task was dropped - record it for this specific frame
                 var frameId = $"{deviceId}:{frame.StartAddress}:{frameIndex}";
@@ -161,11 +162,14 @@ public class DeviceScanManager
     public System.Collections.Concurrent.ConcurrentQueue<long> GetAllDroppedTimestamps()
     {
         var allDropped = new System.Collections.Concurrent.ConcurrentQueue<long>();
-        foreach (var queue in _deviceQueues.Values)
+        foreach (var worker in _workers.Values)
         {
-            foreach (var timestamp in queue.DroppedTimestamps)
+            foreach (var queue in worker.GetAllQueues())
             {
-                allDropped.Enqueue(timestamp);
+                foreach (var timestamp in queue.DroppedTimestamps)
+                {
+                    allDropped.Enqueue(timestamp);
+                }
             }
         }
         return allDropped;
@@ -178,12 +182,15 @@ public class DeviceScanManager
         long totalDequeued = 0;
         long totalDropped = 0;
 
-        foreach (var queue in _deviceQueues.Values)
+        foreach (var worker in _workers.Values)
         {
-            totalSize += queue.Count;
-            totalEnqueued += queue.EnqueuedCount;
-            totalDequeued += queue.DequeuedCount;
-            totalDropped += queue.DroppedCount;
+            foreach (var queue in worker.GetAllQueues())
+            {
+                totalSize += queue.Count;
+                totalEnqueued += queue.EnqueuedCount;
+                totalDequeued += queue.DequeuedCount;
+                totalDropped += queue.DroppedCount;
+            }
         }
 
         return new

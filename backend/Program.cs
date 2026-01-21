@@ -1,16 +1,13 @@
-// Register ScadaHealthMonitor
-builder.Services.AddSingleton<ScadaHealthMonitor>(sp =>
-{
-    var logger = sp.GetRequiredService<ILogger<ScadaHealthMonitor>>();
-    var config = sp.GetRequiredService<IConfiguration>();
-    int alertThreshold = config.GetValue<int>("ThreadPoolMonitor:AlertThreshold", 10);
-    int intervalMs = config.GetValue<int>("ThreadPoolMonitor:IntervalMs", 1000);
-    return new ScadaHealthMonitor(logger, alertThreshold, intervalMs);
-});
 using ModbusPerfTest.Backend.Services;
 using ModbusPerfTest.Backend.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure thread pool minimum worker threads
+ThreadPool.GetMinThreads(out int _, out int minIoThreads);
+var minWorkerThreads = builder.Configuration.GetValue<int>("ThreadPoolMonitor:MinWorkerThreads", 22);
+ThreadPool.SetMinThreads(minWorkerThreads, minIoThreads);
+Console.WriteLine($"Thread pool configured: MinWorkerThreads={minWorkerThreads}");
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -78,6 +75,15 @@ builder.Services.AddSingleton<HeartbeatLogger>();
 builder.Services.AddSingleton<HeartbeatMonitor>();
 builder.Services.AddHostedService<HeartbeatMonitor>(sp => sp.GetRequiredService<HeartbeatMonitor>());
 
+// Register ScadaHealthMonitor
+builder.Services.AddSingleton<ScadaHealthMonitor>(sp =>
+{
+    var logger = sp.GetRequiredService<ILogger<ScadaHealthMonitor>>();
+    var config = sp.GetRequiredService<IConfiguration>();
+    int alertThreshold = config.GetValue<int>("ThreadPoolMonitor:AlertThreshold", 10);
+    int intervalMs = config.GetValue<int>("ThreadPoolMonitor:IntervalMs", 1000);
+    return new ScadaHealthMonitor(logger, alertThreshold, intervalMs);
+});
 
 var app = builder.Build();
 
