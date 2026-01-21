@@ -12,11 +12,13 @@ public class HighPerformanceModbusDriver : IModbusDriver
 {
     private readonly ConcurrentDictionary<string, ConnectionContext> _connections = new();
     private readonly ILogger<HighPerformanceModbusDriver>? _logger;
+    private readonly ModbusExceptionLogger? _exceptionLogger;
     private bool _disposed;
 
-    public HighPerformanceModbusDriver(ILogger<HighPerformanceModbusDriver>? logger = null)
+    public HighPerformanceModbusDriver(ILogger<HighPerformanceModbusDriver>? logger = null, ModbusExceptionLogger? exceptionLogger = null)
     {
         _logger = logger;
+        _exceptionLogger = exceptionLogger;
     }
 
     public async Task<ushort[]?> ReadHoldingRegistersAsync(
@@ -40,6 +42,9 @@ public class HighPerformanceModbusDriver : IModbusDriver
         {
             _logger?.LogError(ex, "Modbus read failed for {DeviceKey} SlaveId={SlaveId} Address={Address} Count={Count}", 
                 deviceKey, slaveId, startAddress, count);
+            
+            // Log exception to file
+            _exceptionLogger?.LogException(ex, deviceKey, slaveId, startAddress, count, "ReadHoldingRegisters");
             
             // Remove failed connection - will be recreated on next attempt
             if (_connections.TryRemove(deviceKey, out var ctx))
@@ -123,6 +128,28 @@ public class HighPerformanceModbusDriver : IModbusDriver
         }
 
         _connections.Clear();
+    }
+
+    public void CloseAllConnections()
+    {
+        _logger?.LogInformation("Closing all HighPerformance connections ({Count} total)", _connections.Count);
+
+        var connectionsToClose = _connections.ToList();
+        _connections.Clear();
+
+        foreach (var kvp in connectionsToClose)
+        {
+            try
+            {
+                kvp.Value.DisposeAsync().AsTask().Wait(TimeSpan.FromSeconds(2));
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogWarning(ex, "Error closing connection for {DeviceKey}", kvp.Key);
+            }
+        }
+
+        _logger?.LogInformation("All connections closed. New connections will be created on next read.");
     }
 
     private class ConnectionContext

@@ -10,11 +10,15 @@ public class DeviceScanManager
     private readonly ClockDriftService _clockDriftService;
     private readonly DataQualityService _dataQualityService;
     private readonly DataPointBuffer _dataPointBuffer;
+    private readonly RuntimeConfigService _runtimeConfigService;
     private readonly Dictionary<string, DeviceScanWorker> _workers = new();
     private readonly Dictionary<string, ScanTaskQueue> _deviceQueues = new();
     private readonly Dictionary<string, List<Task>> _taskGenerators = new();
     private Task? _stalenessCheckTask;
     private CancellationTokenSource? _cts;
+    private bool _isRunning = false;
+
+    public bool IsRunning => _isRunning;
 
     public DeviceScanManager(
         IModbusDriver driver,
@@ -22,7 +26,8 @@ public class DeviceScanManager
         MetricCollector metricCollector,
         ClockDriftService clockDriftService,
         DataQualityService dataQualityService,
-        DataPointBuffer dataPointBuffer)
+        DataPointBuffer dataPointBuffer,
+        RuntimeConfigService runtimeConfigService)
     {
         _driver = driver;
         _globalQueue = taskQueue;
@@ -30,12 +35,23 @@ public class DeviceScanManager
         _clockDriftService = clockDriftService;
         _dataQualityService = dataQualityService;
         _dataPointBuffer = dataPointBuffer;
+        _runtimeConfigService = runtimeConfigService;
     }
 
     public void StartMonitoring(List<DeviceConfig> devices)
     {
+        if (_isRunning)
+        {
+            throw new InvalidOperationException("Monitoring is already running");
+        }
+
         _cts = new CancellationTokenSource();
         var token = _cts.Token;
+        _isRunning = true;
+
+        // Get global AllowConcurrentFrameReads setting from runtime config
+        var runtimeConfig = _runtimeConfigService.GetConfig();
+        var allowConcurrentFrameReads = runtimeConfig.AllowConcurrentFrameReads;
 
         foreach (var device in devices)
         {
@@ -45,10 +61,21 @@ public class DeviceScanManager
             var deviceQueue = new ScanTaskQueue();
             _deviceQueues[deviceId] = deviceQueue;
             
+            // Override device config with global runtime setting
+            var deviceConfigCopy = new DeviceConfig
+            {
+                Name = device.Name,
+                IpAddress = device.IpAddress,
+                Port = device.Port,
+                SlaveId = device.SlaveId,
+                Frames = device.Frames,
+                AllowConcurrentFrameReads = allowConcurrentFrameReads // Use global setting
+            };
+            
             // Create and start worker for this device
             var worker = new DeviceScanWorker(
                 deviceId,
-                device,
+                deviceConfigCopy,
                 _driver,
                 deviceQueue,
                 _globalQueue,
@@ -93,38 +120,67 @@ public class DeviceScanManager
             while (await periodicTimer.WaitForNextTickAsync(token))
             {
                 _dataQualityService.CheckStaleness();
+        if (!_isRunning)
+        {
+            return;
+        }
+
             }
         }, token);
     }
 
     public async Task StopMonitoringAsync()
     {
+        if (!_isRunning)
+        {
+            return;
+        }
+
+        _isRunning = false;
+
         // Cancel all periodic timers
         _cts?.Cancel();
         
-        // Wait for staleness check task to complete
+        // Wait for staleness check task to complete with timeout
         if (_stalenessCheckTask != null)
         {
-            try { await _stalenessCheckTask; } catch (OperationCanceledException) { }
+            try 
+            { 
+                await Task.WhenAny(_stalenessCheckTask, Task.Delay(2000)); 
+            } 
+            catch (OperationCanceledException) { }
             _stalenessCheckTask = null;
         }
         
-        // Wait for all periodic timer tasks to complete
-        foreach (var tasks in _taskGenerators.Values)
+        // Wait for all periodic timer tasks to complete with timeout
+        var allTimerTasks = _taskGenerators.Values.SelectMany(x => x).ToList();
+        if (allTimerTasks.Any())
         {
-            foreach (var task in tasks)
+            try
             {
-                try { await task; } catch (OperationCanceledException) { }
+                await Task.WhenAny(Task.WhenAll(allTimerTasks), Task.Delay(2000));
             }
+            catch (OperationCanceledException) { }
         }
         _taskGenerators.Clear();
 
-        // Stop all workers
-        foreach (var worker in _workers.Values)
+        // Stop all workers with timeout
+        var stopTasks = _workers.Values.Select(w => w.StopAsync()).ToList();
+        if (stopTasks.Any())
         {
-            await worker.StopAsync();
+            try
+            {
+                await Task.WhenAny(Task.WhenAll(stopTasks), Task.Delay(5000));
+            }
+            catch { }
         }
         _workers.Clear();
+        
+        // Clear device queues
+        _deviceQueues.Clear();
+        
+        // Close all TCP connections - they will be recreated on next start
+        _driver?.CloseAllConnections();
         
         // Dispose cancellation token source
         _cts?.Dispose();

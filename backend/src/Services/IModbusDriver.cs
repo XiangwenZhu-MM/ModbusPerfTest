@@ -9,4 +9,10 @@ public interface IModbusDriver : IDisposable
         ushort startAddress,
         ushort count,
         CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Closes all active TCP connections without disposing the driver.
+    /// Allows the driver to be reused by creating new connections on next read.
+    /// </summary>
+    void CloseAllConnections();
 }

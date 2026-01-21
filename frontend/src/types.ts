@@ -18,6 +18,7 @@ export interface SystemHealthMetric {
   saturationIndex: number;
   droppedTPM: number;
   timestamp: string;
+  exceptionCount?: number;
 }
 
 export interface ClockDriftStatistics {
@@ -84,8 +85,15 @@ export interface HeartbeatMetrics {
 
 export interface TimeRangeCount {
   count: number;
+  theoreticalCount: number;
+  missingRate: number;
   startTime: string;
   endTime: string;
+}
+
+export interface DeviceCountResult {
+  deviceName: string;
+  count: number;
 }
 
 export interface DataPointCountsResult {

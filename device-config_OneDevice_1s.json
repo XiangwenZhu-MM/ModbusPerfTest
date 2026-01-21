@@ -1,0 +1,25 @@
+{
+  "devices": [
+    {
+      "name": "Port1",
+      "ipAddress": "10.160.140.130",
+      "port": 501,
+      "slaveId": 1,
+      "allowConcurrentFrameReads": true,
+      "frames": [
+        {
+          "name": "Frame1",
+          "startAddress": 400001,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        },
+        {
+          "name": "Frame2",
+          "startAddress": 400051,
+          "count": 50,
+          "scanFrequencyMs": 1000
+        }
+      ]
+    }
+  ]
+}

@@ -18,6 +18,19 @@ if ($existingProcess) {
 Write-Host "Starting backend server..." -ForegroundColor Yellow
 Set-Location -Path "$PSScriptRoot\backend"
 
+# Set environment (Development or Production)
+# Uncomment ONE of these lines to control which appsettings file is used:
+# $env:ASPNETCORE_ENVIRONMENT = "Development"  # Uses appsettings.Development.json
+# $env:ASPNETCORE_ENVIRONMENT = "Production"   # Uses appsettings.Production.json (if exists)
+
+# Show which environment will be used
+$currentEnv = $env:ASPNETCORE_ENVIRONMENT
+if (-not $currentEnv) {
+    $currentEnv = "Development (default)"
+}
+Write-Host "Environment: $currentEnv" -ForegroundColor Cyan
+Write-Host "  → Using: appsettings.json + appsettings.$($currentEnv -replace ' \(default\)', '').json" -ForegroundColor Gray
+
 Write-Host ""
 Write-Host "Backend will be available at: http://localhost:5000" -ForegroundColor Green
 Write-Host "Press Ctrl+C to stop the server" -ForegroundColor Gray

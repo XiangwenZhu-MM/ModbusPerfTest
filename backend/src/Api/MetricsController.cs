@@ -10,15 +10,18 @@ public class MetricsController : ControllerBase
     private readonly MetricCollector _metricCollector;
     private readonly DeviceScanManager _scanManager;
     private readonly DeviceConfigService _configService;
+    private readonly ModbusExceptionLogger _exceptionLogger;
 
     public MetricsController(
         MetricCollector metricCollector,
         DeviceScanManager scanManager,
-        DeviceConfigService configService)
+        DeviceConfigService configService,
+        ModbusExceptionLogger exceptionLogger)
     {
         _metricCollector = metricCollector;
         _scanManager = scanManager;
         _configService = configService;
+        _exceptionLogger = exceptionLogger;
     }
 
     [HttpGet("device")]
@@ -33,7 +36,17 @@ public class MetricsController : ControllerBase
     {
         var droppedTimestamps = _scanManager.GetAllDroppedTimestamps();
         var health = _metricCollector.CalculateSystemHealth(droppedTimestamps);
-        return Ok(health);
+        
+        // Add exception count to health metrics
+        var healthWithExceptions = new
+        {
+            health.IngressTPM,
+            health.EgressTPM,
+            health.Timestamp,
+            ExceptionCount = _exceptionLogger.ExceptionCount
+        };
+        
+        return Ok(healthWithExceptions);
     }
 
     [HttpGet("queue")]

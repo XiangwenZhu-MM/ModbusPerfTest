@@ -7,19 +7,18 @@ namespace ModbusPerfTest.Backend.Services;
 /// </summary>
 public class DataPointBuffer : IHostedService, IDisposable
 {
-    private readonly DataPointRepository _repository;
-    private readonly ConcurrentQueue<(DateTime Timestamp, ushort Value)> _queue;
+    private readonly IDataPointRepository _repository;
+    private readonly ConcurrentQueue<DataPointEntry> _queue;
     private readonly Timer _flushTimer;
     private readonly ILogger<DataPointBuffer> _logger;
     private readonly TimeSpan _flushInterval = TimeSpan.FromSeconds(1);
-    private readonly int _batchSize = 10000;
     private bool _isDisposed;
 
-    public DataPointBuffer(DataPointRepository repository, ILogger<DataPointBuffer> logger)
+    public DataPointBuffer(IDataPointRepository repository, ILogger<DataPointBuffer> logger)
     {
         _repository = repository;
         _logger = logger;
-        _queue = new ConcurrentQueue<(DateTime, ushort)>();
+        _queue = new ConcurrentQueue<DataPointEntry>();
         _flushTimer = new Timer(FlushCallback, null, Timeout.Infinite, Timeout.Infinite);
     }
 
@@ -38,13 +37,20 @@ public class DataPointBuffer : IHostedService, IDisposable
     }
 
     /// <summary>
-    /// Non-blocking method to enqueue data points
+    /// Non-blocking method to enqueue data points with metadata for storage
     /// </summary>
-    public void EnqueueBatch(DateTime timestamp, ushort[] values)
+    public void EnqueueBatch(DateTime timestamp, ushort[] values, string deviceName, string frameName, ushort startAddress)
     {
-        foreach (var value in values)
+        for (int i = 0; i < values.Length; i++)
         {
-            _queue.Enqueue((timestamp, value));
+            _queue.Enqueue(new DataPointEntry(
+                timestamp,
+                values[i],
+                deviceName,
+                frameName,
+                (ushort)(startAddress + i),
+                i + 1 // 1-based index (00001, 00002...)
+            ));
         }
     }
 
@@ -59,17 +65,18 @@ public class DataPointBuffer : IHostedService, IDisposable
 
         try
         {
-            var batch = new List<ushort>();
+            var batch = new List<DataPointEntry>();
             
-            // Dequeue ALL available items (no limit) for high-throughput scenarios
+            // Dequeue ALL available items
             while (_queue.TryDequeue(out var item))
             {
-                batch.Add(item.Value);
+                batch.Add(item);
             }
 
             if (batch.Count > 0)
             {
-                await _repository.InsertDataPointsAsync(batch.ToArray());
+                await _repository.InsertDataPointsAsync(batch);
+                
                 _logger.LogDebug("Flushed {Count} data points to database, {Remaining} remaining in queue", 
                     batch.Count, _queue.Count);
             }

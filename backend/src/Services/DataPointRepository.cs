@@ -2,12 +2,15 @@ using Microsoft.Data.Sqlite;
 
 namespace ModbusPerfTest.Backend.Services;
 
-public class DataPointRepository : IDisposable
+public class DataPointRepository : IDataPointRepository
 {
     private readonly string _connectionString;
+    private readonly SemaphoreSlim _dbLock = new SemaphoreSlim(1, 1);
+    private readonly ILogger<DataPointRepository> _logger;
 
-    public DataPointRepository(string dbPath = "datapoints.db")
+    public DataPointRepository(ILogger<DataPointRepository> logger, string dbPath = "datapoints.db")
     {
+        _logger = logger;
         _connectionString = $"Data Source={dbPath}";
         InitializeDatabase();
         EnableWalMode();
@@ -23,10 +26,13 @@ public class DataPointRepository : IDisposable
             CREATE TABLE IF NOT EXISTS DataPoints (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Timestamp INTEGER NOT NULL,
+                DeviceName TEXT,
+                TagName TEXT,
                 Value INTEGER NOT NULL
             );
             
             CREATE INDEX IF NOT EXISTS IX_DataPoints_Timestamp ON DataPoints(Timestamp);
+            CREATE INDEX IF NOT EXISTS IX_DataPoints_DeviceName ON DataPoints(DeviceName);
         ";
         command.ExecuteNonQuery();
     }
@@ -40,62 +46,69 @@ public class DataPointRepository : IDisposable
         command.ExecuteNonQuery();
     }
 
-    public async Task InsertDataPointAsync(ushort value)
+    public async Task InsertDataPointsAsync(IEnumerable<DataPointEntry> entries)
     {
-        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        
-        using var connection = new SqliteConnection(_connectionString);
-        await connection.OpenAsync();
+        if (entries == null || !entries.Any()) return;
 
-        var command = connection.CreateCommand();
-        command.CommandText = "INSERT INTO DataPoints (Timestamp, Value) VALUES ($timestamp, $value)";
-        command.Parameters.AddWithValue("$timestamp", timestamp);
-        command.Parameters.AddWithValue("$value", value);
-
-        await command.ExecuteNonQueryAsync();
-    }
-
-    public async Task InsertDataPointsAsync(ushort[] values)
-    {
-        if (values == null || values.Length == 0) return;
-
-        var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        int maxVariables = 999; // SQLite default
-        int chunkSize = maxVariables; // 1 variable per value
+        int maxVariables = 999; 
         int maxRetries = 5;
         int delayMs = 100;
+        var entryList = entries.ToList();
 
-        for (int attempt = 0; attempt < maxRetries; attempt++)
+        // Serialize writes to prevent SQLITE_BUSY under high load
+        await _dbLock.WaitAsync();
+        try
         {
-            try
+            for (int attempt = 0; attempt < maxRetries; attempt++)
             {
-                using var connection = new SqliteConnection(_connectionString);
-                await connection.OpenAsync();
-                using var transaction = connection.BeginTransaction();
-
-                for (int offset = 0; offset < values.Length; offset += chunkSize)
+                try
                 {
-                    var chunk = values.Skip(offset).Take(chunkSize).ToArray();
-                    var valuePlaceholders = string.Join(",", chunk.Select((_, i) => $"({timestamp}, $v{i})"));
-                    var sql = $"INSERT INTO DataPoints (Timestamp, Value) VALUES {valuePlaceholders}";
-                    var command = connection.CreateCommand();
-                    command.CommandText = sql;
-                    for (int i = 0; i < chunk.Length; i++)
-                    {
-                        command.Parameters.AddWithValue($"$v{i}", chunk[i]);
-                    }
-                    await command.ExecuteNonQueryAsync();
-                }
+                    using var connection = new SqliteConnection(_connectionString);
+                    await connection.OpenAsync();
+                    using var transaction = connection.BeginTransaction();
 
-                await transaction.CommitAsync();
-                return;
+                    // SQLite has a limit on parameters, so we chunk the entries
+                    // Each entry uses 4 parameters: Timestamp, DeviceName, TagName, Value
+                    int entriesPerChunk = maxVariables / 4;
+
+                    for (int offset = 0; offset < entryList.Count; offset += entriesPerChunk)
+                    {
+                        var chunk = entryList.Skip(offset).Take(entriesPerChunk).ToList();
+                        var valuePlaceholders = string.Join(",", chunk.Select((_, i) => $"($t{i}, $d{i}, $n{i}, $v{i})"));
+                        var sql = $"INSERT INTO DataPoints (Timestamp, DeviceName, TagName, Value) VALUES {valuePlaceholders}";
+                        
+                        var command = connection.CreateCommand();
+                        command.CommandText = sql;
+                        command.Transaction = transaction;
+
+                        for (int i = 0; i < chunk.Count; i++)
+                        {
+                            var entry = chunk[i];
+                            var timestampMs = new DateTimeOffset(entry.Timestamp).ToUnixTimeMilliseconds();
+                            var tagName = $"{entry.DeviceName}{entry.FrameName}{entry.IndexInFrame:D5}";
+                            
+                            command.Parameters.AddWithValue($"$t{i}", timestampMs);
+                            command.Parameters.AddWithValue($"$d{i}", entry.DeviceName);
+                            command.Parameters.AddWithValue($"$n{i}", tagName);
+                            command.Parameters.AddWithValue($"$v{i}", entry.Value);
+                        }
+                        await command.ExecuteNonQueryAsync();
+                    }
+
+                    await transaction.CommitAsync();
+                    return;
+                }
+                catch (SqliteException ex) when (ex.SqliteErrorCode == 5) // SQLITE_BUSY
+                {
+                    if (attempt == maxRetries - 1) throw;
+                    await Task.Delay(delayMs);
+                    delayMs *= 2;
+                }
             }
-            catch (SqliteException ex) when (ex.SqliteErrorCode == 5) // SQLITE_BUSY (database is locked)
-            {
-                if (attempt == maxRetries - 1) throw;
-                await Task.Delay(delayMs);
-                delayMs *= 2; // Exponential backoff
-            }
+        }
+        finally
+        {
+            _dbLock.Release();
         }
     }
 
@@ -153,6 +166,40 @@ public class DataPointRepository : IDisposable
         return result != null ? Convert.ToInt64(result) : 0;
     }
 
+    public async Task<List<DeviceCountResult>> GetDeviceCountsAsync(DateTime start, DateTime end)
+    {
+        var results = new List<DeviceCountResult>();
+        try
+        {
+            var startMs = new DateTimeOffset(start).ToUnixTimeMilliseconds();
+            var endMs = new DateTimeOffset(end).ToUnixTimeMilliseconds();
+
+            await _dbLock.WaitAsync();
+            using var connection = new SqliteConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var sql = "SELECT DeviceName, COUNT(*) FROM DataPoints WHERE Timestamp >= @start AND Timestamp <= @end GROUP BY DeviceName ORDER BY DeviceName";
+            using var command = new SqliteCommand(sql, connection);
+            command.Parameters.AddWithValue("@start", startMs);
+            command.Parameters.AddWithValue("@end", endMs);
+
+            using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                results.Add(new DeviceCountResult(reader.GetString(0), reader.GetInt64(1)));
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting device counts from SQLite");
+        }
+        finally
+        {
+            _dbLock.Release();
+        }
+        return results;
+    }
+
     public async Task ClearAllDataAsync()
     {
         using var connection = new SqliteConnection(_connectionString);
@@ -165,13 +212,15 @@ public class DataPointRepository : IDisposable
 
     public void Dispose()
     {
-        // No persistent connection to dispose
+        _dbLock.Dispose();
     }
 }
 
 public class TimeRangeCount
 {
     public long Count { get; set; }
+    public long TheoreticalCount { get; set; }
+    public double MissingRate { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
 }

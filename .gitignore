@@ -1,5 +1,7 @@
 # Ignore the database file
 backend/datapoints.db
+backend/datapoints.db-shm
+backend/datapoints.db-wal
 # .NET / C#
 bin/
 obj/
@@ -41,3 +43,7 @@ Thumbs.db
 # Test data
 *.json.bak
 test-data/
+backend/datapoints.db-shm
+backend/datapoints.db-wal
+backend/datapoints.db-shm
+backend/datapoints.db-wal

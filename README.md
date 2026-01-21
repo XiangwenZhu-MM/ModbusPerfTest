@@ -90,9 +90,14 @@ In `appsettings.json`, configure which driver to use:
 
 ```json
 {
-  "UseHighPerformanceDriver": true   // Use async high-performance driver (recommended)
+  "UseHighPerformanceDriver": true,   // Use async high-performance driver (recommended)
+  "ModbusLibrary": "NModbus"          // Choose: "NModbus" or "NModbusAsync"
 }
 ```
+
+**Available Modbus Libraries:**
+- `"NModbus"` (default): Standard NModbus library with proven stability
+- `"NModbusAsync"`: NModbus4.NetCore library for async-first operations
 
 See [specs/003-high-perf-modbus-driver/IMPLEMENTATION_SUMMARY.md](specs/003-high-perf-modbus-driver/IMPLEMENTATION_SUMMARY.md) for detailed driver documentation.
 

@@ -62,4 +62,23 @@ public class DeviceConfigService
     {
         return _configuration?.Devices ?? new List<DeviceConfig>();
     }
+
+    public double CalculateTheoreticalTPM()
+    {
+        if (_configuration == null || _configuration.Devices == null) return 0;
+        
+        double totalPointsPerMinute = 0;
+        foreach (var device in _configuration.Devices)
+        {
+            if (device.Frames == null) continue;
+            foreach (var frame in device.Frames)
+            {
+                if (frame.ScanFrequencyMs <= 0) continue;
+                
+                double scansPerMinute = 60000.0 / frame.ScanFrequencyMs;
+                totalPointsPerMinute += scansPerMinute * frame.Count;
+            }
+        }
+        return totalPointsPerMinute;
+    }
 }

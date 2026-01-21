@@ -14,6 +14,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Register RuntimeConfigService
+builder.Services.AddSingleton<RuntimeConfigService>();
+
 // Add CORS for frontend
 builder.Services.AddCors(options =>
 {
@@ -27,32 +30,80 @@ builder.Services.AddCors(options =>
 });
 
 // Register application services as singletons
-builder.Services.AddSingleton<DataPointRepository>();
+// Register IDataPointRepository based on DataPointStorage config
+var dataPointStorageConfig = builder.Configuration.GetSection("DataPointStorage");
+var backendType = dataPointStorageConfig.GetValue<string>("Backend", "SQLite");
+if (backendType.Equals("InfluxDB", StringComparison.OrdinalIgnoreCase))
+{
+    var influxConfig = dataPointStorageConfig.GetSection("InfluxDB");
+    var url = influxConfig.GetValue<string>("Url", "http://localhost:8086");
+    var token = influxConfig.GetValue<string>("Token", "");
+    var bucket = influxConfig.GetValue<string>("Bucket", "modbus");
+    var org = influxConfig.GetValue<string>("Org", "modbus-org");
+    builder.Services.AddSingleton<IDataPointRepository>(sp => new InfluxDataPointRepository(url, token, bucket, org));
+    Console.WriteLine($"Using InfluxDB backend for data points: {url}, bucket={bucket}, org={org}");
+}
+else
+{
+    builder.Services.AddSingleton<IDataPointRepository, DataPointRepository>();
+    Console.WriteLine("Using SQLite backend for data points");
+}
+
+// Register DataPointBuffer with IDataPointRepository
 builder.Services.AddSingleton<DataPointBuffer>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<DataPointBuffer>());
 builder.Services.AddSingleton<DeviceConfigService>();
 builder.Services.AddSingleton<ScanTaskQueue>();
 builder.Services.AddSingleton<MetricCollector>();
 
-// Register Modbus driver based on configuration
-// Set "UseHighPerformanceDriver" to true to use the high-performance async driver (recommended)
-var useHighPerformanceDriver = builder.Configuration.GetValue<bool>("UseHighPerformanceDriver", true);
+// Register Modbus exception logger
+builder.Services.AddSingleton<ModbusExceptionLogger>();
 
-if (useHighPerformanceDriver)
+// Register Modbus driver based on configuration
+// Set "UseAsyncRead" to true to use async Modbus read operations (recommended)
+// Set "UseAsyncNModbus" to true to use NModbusAsync library (wolf8196 fork) instead of standard NModbus
+var useAsyncRead = builder.Configuration.GetValue<bool>("UseAsyncRead", true);
+var useAsyncNModbus = builder.Configuration.GetValue<bool>("UseAsyncNModbus", false);
+
+if (useAsyncRead)
 {
-    Console.WriteLine("Using HIGH-PERFORMANCE Modbus driver (NModbus TCP with async operations)");
-    builder.Services.AddSingleton<IModbusDriver, HighPerformanceModbusDriver>();
+    if (useAsyncNModbus)
+    {
+        Console.WriteLine("Using ASYNC read with NModbusAsync library (NModbusAsyncDriver)");
+        builder.Services.AddSingleton<IModbusDriver, NModbusAsyncDriver>();
+    }
+    else
+    {
+        Console.WriteLine("Using ASYNC read with NModbus library (HighPerformanceModbusDriver)");
+        builder.Services.AddSingleton<IModbusDriver, HighPerformanceModbusDriver>();
+    }
 }
 else
 {
-    Console.WriteLine("Using STANDARD Modbus driver (NModbus TCP)");
+    if (useAsyncNModbus)
+    {
+        Console.WriteLine("WARNING: NModbusAsync library is only supported with async reads. Using NModbus with sync reads instead.");
+    }
+    
+    Console.WriteLine("Using SYNC read with NModbus library (ModbusDriver)");
     builder.Services.AddSingleton<IModbusDriver, ModbusDriver>();
 }
 
 builder.Services.AddSingleton<ClockDriftService>();
 builder.Services.AddSingleton<DataQualityService>();
-builder.Services.AddSingleton<DataPointRepository>();
 builder.Services.AddSingleton<DeviceScanManager>();
+
+// Initialize RuntimeConfigService with current configuration
+var runtimeConfigService = new RuntimeConfigService();
+runtimeConfigService.Initialize(new RuntimeConfig
+{
+    UseAsyncRead = useAsyncRead,
+    UseAsyncNModbus = useAsyncNModbus,
+    AllowConcurrentFrameReads = builder.Configuration.GetValue<bool>("AllowConcurrentFrameReads", false),
+    DataStorageBackend = builder.Configuration.GetSection("DataPointStorage").GetValue<string>("Backend", "SQLite") ?? "SQLite",
+    MinWorkerThreads = minWorkerThreads
+});
+builder.Services.AddSingleton(runtimeConfigService);
 
 // Configure HeartbeatMonitor
 var heartbeatConfig = builder.Configuration.GetSection("HeartbeatMonitor").Get<HeartbeatConfig>() ?? new HeartbeatConfig();
@@ -108,7 +159,10 @@ app.MapControllers();
 
 // Load device configuration from file on startup
 var configService = app.Services.GetRequiredService<DeviceConfigService>();
-var configPath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "device-config.json");
+
+// Get config file name from appsettings.json, defaulting to device-config.json
+var configFileName = app.Configuration.GetValue<string>("DeviceConfigPath", "device-config.json");
+var configPath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", configFileName);
 var normalizedPath = Path.GetFullPath(configPath);
 
 if (File.Exists(normalizedPath))
@@ -118,11 +172,7 @@ if (File.Exists(normalizedPath))
     if (loaded)
     {
         Console.WriteLine($"Configuration loaded successfully. Devices: {configService.GetDevices().Count}");
-        
-        // Automatically start monitoring
-        var scanManager = app.Services.GetRequiredService<DeviceScanManager>();
-        scanManager.StartMonitoring(configService.GetDevices());
-        Console.WriteLine("Device monitoring started.");
+        Console.WriteLine("Device scanning is NOT started automatically. Use Start button in dashboard or POST /api/ScanControl/start");
     }
     else
     {

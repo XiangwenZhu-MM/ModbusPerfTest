@@ -88,10 +88,69 @@ export const api = {
     return response.json();
   },
 
+  async getDeviceDataCountsLastMinute(): Promise<{deviceName: string, count: number}[]> {
+    const response = await fetch(`${API_BASE_URL}/DataPoints/devices/last-minute`);
+    return response.json();
+  },
+
   async clearDataPoints() {
     const response = await fetch(`${API_BASE_URL}/DataPoints/clear`, {
       method: 'DELETE',
     });
     return response.json();
-  }
+  },
+
+  async getThreadPoolMetrics() {
+    const response = await fetch(`${API_BASE_URL}/ThreadPool/metrics`);
+    return response.json();
+  },
+
+  // Scan Control APIs
+  async startScanning() {
+    const response = await fetch(`${API_BASE_URL}/ScanControl/start`, {
+      method: 'POST',
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to start scanning');
+    }
+    return response.json();
+  },
+
+  async stopScanning() {
+    const response = await fetch(`${API_BASE_URL}/ScanControl/stop`, {
+      method: 'POST',
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to stop scanning');
+    }
+    return response.json();
+  },
+
+  async getScanningStatus() {
+    const response = await fetch(`${API_BASE_URL}/ScanControl/status`);
+    return response.json();
+  },
+
+  // Configuration APIs
+  async getConfiguration() {
+    const response = await fetch(`${API_BASE_URL}/Configuration`);
+    return response.json();
+  },
+
+  async applyConfiguration(config: any) {
+    const response = await fetch(`${API_BASE_URL}/Configuration/apply`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(config),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to apply configuration');
+    }
+    return response.json();
+  },
 };

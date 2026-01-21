@@ -88,9 +88,14 @@ public class DeviceScanWorker
     public async Task StopAsync()
     {
         _cts?.Cancel();
-        if (_workerTasks != null)
+        if (_workerTasks != null && _workerTasks.Any())
         {
-            await Task.WhenAll(_workerTasks);
+            // Wait for workers to stop with a timeout
+            try
+            {
+                await Task.WhenAny(Task.WhenAll(_workerTasks), Task.Delay(3000));
+            }
+            catch { }
         }
     }
 
@@ -194,7 +199,8 @@ public class DeviceScanWorker
             // Enqueue data points to buffer (non-blocking, batched writes)
             if (data != null)
             {
-                _dataPointBuffer.EnqueueBatch(DateTime.UtcNow, data);
+                var frameName = frame?.Name ?? "UnknownFrame";
+                _dataPointBuffer.EnqueueBatch(DateTime.UtcNow, data, _config.Name, frameName, task.StartAddress);
             }
             
             // Update data quality for each register read
