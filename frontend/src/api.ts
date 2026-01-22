@@ -105,6 +105,11 @@ export const api = {
     return response.json();
   },
 
+  async getSystemResourceMetrics() {
+    const response = await fetch(`${API_BASE_URL}/Metrics/system-resources`);
+    return response.json();
+  },
+
   // Scan Control APIs
   async startScanning() {
     const response = await fetch(`${API_BASE_URL}/ScanControl/start`, {

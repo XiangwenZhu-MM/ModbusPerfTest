@@ -11,17 +11,20 @@ public class MetricsController : ControllerBase
     private readonly DeviceScanManager _scanManager;
     private readonly DeviceConfigService _configService;
     private readonly ModbusExceptionLogger _exceptionLogger;
+    private readonly ResourceMonitorService _resourceMonitor;
 
     public MetricsController(
         MetricCollector metricCollector,
         DeviceScanManager scanManager,
         DeviceConfigService configService,
-        ModbusExceptionLogger exceptionLogger)
+        ModbusExceptionLogger exceptionLogger,
+        ResourceMonitorService resourceMonitor)
     {
         _metricCollector = metricCollector;
         _scanManager = scanManager;
         _configService = configService;
         _exceptionLogger = exceptionLogger;
+        _resourceMonitor = resourceMonitor;
     }
 
     [HttpGet("device")]
@@ -103,5 +106,12 @@ public class MetricsController : ControllerBase
         }
         
         return Ok(frames);
+    }
+
+    [HttpGet("system-resources")]
+    public IActionResult GetSystemResources()
+    {
+        var metrics = _resourceMonitor.GetLatestMetrics();
+        return Ok(metrics);
     }
 }

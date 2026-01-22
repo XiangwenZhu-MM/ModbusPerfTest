@@ -73,6 +73,12 @@ export interface ThreadPoolMetrics {
   maxWorkerThreads: number;
 }
 
+export interface SystemResourceMetrics {
+  cpuPercentage: number;
+  memoryUsageMB: number;
+  timestamp: string;
+}
+
 export interface HeartbeatMetrics {
   lastMonoElapsedMs: number;
   lastWallElapsedMs: number;

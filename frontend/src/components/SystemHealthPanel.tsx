@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SystemHealthMetric, HeartbeatMetrics as HeartbeatMetricsType, DataPointCountsResult, ThreadPoolMetrics, DeviceCountResult } from '../types';
+import { SystemHealthMetric, HeartbeatMetrics as HeartbeatMetricsType, DataPointCountsResult, ThreadPoolMetrics, DeviceCountResult, SystemResourceMetrics } from '../types';
 import { api } from '../api';
 import HeartbeatMetrics from './HeartbeatMetrics';
 import HeartbeatWarnings from './HeartbeatWarnings';
@@ -10,6 +10,7 @@ const SystemHealthPanel: React.FC = () => {
   const [queueStats, setQueueStats] = useState<any>(null);
   const [dataPointCounts, setDataPointCounts] = useState<DataPointCountsResult | null>(null);
   const [threadPoolMetrics, setThreadPoolMetrics] = useState<ThreadPoolMetrics | null>(null);
+  const [systemResources, setSystemResources] = useState<SystemResourceMetrics | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deviceCounts, setDeviceCounts] = useState<DeviceCountResult[]>([]);
   const [loadingDevices, setLoadingDevices] = useState(false);
@@ -17,23 +18,25 @@ const SystemHealthPanel: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [healthData, metricsData, queueData, threadData] = await Promise.all([
+        const [healthData, metricsData, queueData, threadData, resourceData] = await Promise.all([
           api.getSystemHealth(),
           api.getHeartbeatMetrics(),
           api.getQueueStats(),
           api.getThreadPoolMetrics(),
+          api.getSystemResourceMetrics(),
         ]);
         setHealth(healthData);
         setCurrentMetrics(metricsData);
         setQueueStats(queueData);
         setThreadPoolMetrics(threadData);
+        setSystemResources(resourceData);
       } catch (error) {
         console.error('Error fetching system health:', error);
       }
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 5000); // Update every 5 seconds
+    const interval = setInterval(fetchData, 2000); // Update every 2 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -86,6 +89,16 @@ const SystemHealthPanel: React.FC = () => {
             <div className="metric-label">
               {currentMetrics.latencyMs > 0 ? '⚠️ Delayed' : '✓ On Time'}
             </div>
+          </div>
+          <div className="metric-card">
+            <h3>CPU Usage</h3>
+            <div className="metric-value">{systemResources?.cpuPercentage.toFixed(1) ?? 'N/A'}%</div>
+            <div className="metric-label">Current process CPU usage</div>
+          </div>
+          <div className="metric-card">
+            <h3>Memory Usage</h3>
+            <div className="metric-value">{systemResources?.memoryUsageMB.toFixed(1) ?? 'N/A'} MB</div>
+            <div className="metric-label">Current process memory</div>
           </div>
           <div className="metric-card">
             <h3>Ingress Rate</h3>

@@ -136,6 +136,10 @@ builder.Services.AddSingleton<ScadaHealthMonitor>(sp =>
     return new ScadaHealthMonitor(logger, alertThreshold, intervalMs);
 });
 
+// Register ResourceMonitorService
+builder.Services.AddSingleton<ResourceMonitorService>();
+builder.Services.AddHostedService<ResourceMonitorService>(sp => sp.GetRequiredService<ResourceMonitorService>());
+
 var app = builder.Build();
 
 // Start thread pool health monitor
