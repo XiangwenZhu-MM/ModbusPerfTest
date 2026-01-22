@@ -208,6 +208,10 @@ public class DataPointRepository : IDataPointRepository
         var command = connection.CreateCommand();
         command.CommandText = "DELETE FROM DataPoints";
         await command.ExecuteNonQueryAsync();
+
+        // Run VACUUM to shrink the database file
+        command.CommandText = "VACUUM";
+        await command.ExecuteNonQueryAsync();
     }
 
     public void Dispose()
