@@ -39,17 +39,18 @@ public class MetricsController : ControllerBase
     {
         var droppedTimestamps = _scanManager.GetAllDroppedTimestamps();
         var health = _metricCollector.CalculateSystemHealth(droppedTimestamps);
-        
-        // Add exception count to health metrics
-        var healthWithExceptions = new
+        var scanElapsedSeconds = _scanManager.GetScanElapsedSeconds();
+        // Add exception count and scan elapsed seconds to health metrics
+        var healthWithExtras = new
         {
             health.IngressTPM,
             health.EgressTPM,
             health.Timestamp,
-            ExceptionCount = _exceptionLogger.ExceptionCount
+            ExceptionCount = _exceptionLogger.ExceptionCount,
+            ScanElapsedSeconds = scanElapsedSeconds
         };
         
-        return Ok(healthWithExceptions);
+        return Ok(healthWithExtras);
     }
 
     [HttpGet("queue")]

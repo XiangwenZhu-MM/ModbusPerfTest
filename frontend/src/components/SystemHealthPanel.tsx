@@ -80,9 +80,13 @@ const SystemHealthPanel: React.FC = () => {
   return (
     <div className="panel">
       <h2>System Health Metrics</h2>
-      
       {health && currentMetrics ? (
         <div className="metrics-grid">
+          <div className="metric-card">
+            <h3>Scan Elapsed Time</h3>
+            <div className="metric-value">{health.scanElapsedSeconds ?? 0} s</div>
+            <div className="metric-label">Seconds since scan started</div>
+          </div>
           <div className={`metric-card ${currentMetrics.latencyMs > 0 ? 'metric-alert' : ''}`}>
             <h3>System Latency</h3>
             <div className="metric-value">{currentMetrics.latencyMs} ms</div>

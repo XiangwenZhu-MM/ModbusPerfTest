@@ -1,4 +1,5 @@
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Configuration;
 
 namespace ModbusPerfTest.Backend.Services;
 
@@ -7,11 +8,24 @@ public class DataPointRepository : IDataPointRepository
     private readonly string _connectionString;
     private readonly SemaphoreSlim _dbLock = new SemaphoreSlim(1, 1);
     private readonly ILogger<DataPointRepository> _logger;
+    private readonly int _walAutoCheckpoint;
+    private readonly int _journalSizeLimit;
 
     public DataPointRepository(ILogger<DataPointRepository> logger, string dbPath = "datapoints.db")
     {
         _logger = logger;
         _connectionString = $"Data Source={dbPath}";
+
+        // Read from appsettings.json
+        var config = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .Build();
+        var walAutoCheckpoint = config.GetSection("DataPointStorage:WalAutoCheckpoint").Value;
+        var journalSizeLimit = config.GetSection("DataPointStorage:JournalSizeLimit").Value;
+        _walAutoCheckpoint = int.TryParse(walAutoCheckpoint, out var w) ? w : 100;
+        _journalSizeLimit = int.TryParse(journalSizeLimit, out var j) ? j : 1048576;
+
         InitializeDatabase();
         EnableWalMode();
     }
@@ -45,11 +59,11 @@ public class DataPointRepository : IDataPointRepository
         command.CommandText = "PRAGMA journal_mode=WAL;";
         command.ExecuteNonQuery();
 
-        // Set frequent WAL checkpointing and size limit
-        command.CommandText = "PRAGMA wal_autocheckpoint = 100;";
+        // Set frequent WAL checkpointing and size limit from config
+        command.CommandText = $"PRAGMA wal_autocheckpoint = {_walAutoCheckpoint};";
         command.ExecuteNonQuery();
 
-        command.CommandText = "PRAGMA journal_size_limit = 1048576;";
+        command.CommandText = $"PRAGMA journal_size_limit = {_journalSizeLimit};";
         command.ExecuteNonQuery();
     }
 

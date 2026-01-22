@@ -19,6 +19,7 @@ export interface SystemHealthMetric {
   droppedTPM: number;
   timestamp: string;
   exceptionCount?: number;
+  scanElapsedSeconds?: number;
 }
 
 export interface ClockDriftStatistics {

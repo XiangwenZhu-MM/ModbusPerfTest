@@ -17,6 +17,7 @@ public class DeviceScanManager
     private Task? _stalenessCheckTask;
     private CancellationTokenSource? _cts;
     private bool _isRunning = false;
+    private DateTime? _scanStartTimeUtc = null;
 
     public bool IsRunning => _isRunning;
 
@@ -38,13 +39,22 @@ public class DeviceScanManager
         _runtimeConfigService = runtimeConfigService;
     }
 
+    public int GetScanElapsedSeconds()
+    {
+        if (_isRunning && _scanStartTimeUtc.HasValue)
+        {
+            return (int)(DateTime.UtcNow - _scanStartTimeUtc.Value).TotalSeconds;
+        }
+        return 0;
+    }
+
     public void StartMonitoring(List<DeviceConfig> devices)
     {
         if (_isRunning)
         {
             throw new InvalidOperationException("Monitoring is already running");
         }
-
+        _scanStartTimeUtc = DateTime.UtcNow;
         _cts = new CancellationTokenSource();
         var token = _cts.Token;
         _isRunning = true;
@@ -137,6 +147,7 @@ public class DeviceScanManager
         }
 
         _isRunning = false;
+        _scanStartTimeUtc = null;
 
         // Cancel all periodic timers
         _cts?.Cancel();
