@@ -44,6 +44,13 @@ public class DataPointRepository : IDataPointRepository
         using var command = connection.CreateCommand();
         command.CommandText = "PRAGMA journal_mode=WAL;";
         command.ExecuteNonQuery();
+
+        // Set frequent WAL checkpointing and size limit
+        command.CommandText = "PRAGMA wal_autocheckpoint = 100;";
+        command.ExecuteNonQuery();
+
+        command.CommandText = "PRAGMA journal_size_limit = 1048576;";
+        command.ExecuteNonQuery();
     }
 
     public async Task InsertDataPointsAsync(IEnumerable<DataPointEntry> entries)
