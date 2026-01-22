@@ -47,3 +47,5 @@ backend/datapoints.db-shm
 backend/datapoints.db-wal
 backend/datapoints.db-shm
 backend/datapoints.db-wal
+backend/datapoints.db-shm
+backend/datapoints.db-wal
