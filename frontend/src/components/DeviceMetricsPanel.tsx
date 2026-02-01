@@ -117,7 +117,7 @@ const DeviceMetricsPanel: React.FC = () => {
 
   return (
     <div className="panel">
-      <h2>Device-Level Metrics</h2>
+      <h2>Device Metrics</h2>
       {latestMetric ? (
         <div className="metrics-grid">
           <div className="metric-card">

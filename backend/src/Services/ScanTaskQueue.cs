@@ -59,6 +59,14 @@ public class ScanTaskQueue
         return null;
     }
 
+    public void Clear()
+    {
+        while (_queue.TryDequeue(out _)) { }
+        while (_droppedTimestamps.TryDequeue(out _)) { }
+        _queuedFrames.Clear();
+        ResetCounters();
+    }
+
     public void ResetCounters()
     {
         Interlocked.Exchange(ref _enqueuedCount, 0);

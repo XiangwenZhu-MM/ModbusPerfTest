@@ -30,6 +30,18 @@ public class DeviceScanManager
 
     public void StartMonitoring(List<DeviceConfig> devices)
     {
+        if (devices == null || devices.Count == 0)
+        {
+            return;
+        }
+
+        // Clear any existing state first
+        foreach (var queue in _deviceQueues.Values)
+        {
+            queue.Clear();
+        }
+        _deviceQueues.Clear();
+
         foreach (var device in devices)
         {
             var deviceId = $"{device.IpAddress}:{device.Port}:{device.SlaveId}";
@@ -80,6 +92,8 @@ public class DeviceScanManager
 
     public async Task StopMonitoringAsync()
     {
+        bool wasActive = _stalenessCheckTimer != null || _workers.Count > 0;
+        
         // Stop staleness check timer
         _stalenessCheckTimer?.Dispose();
         _stalenessCheckTimer = null;
@@ -100,6 +114,18 @@ public class DeviceScanManager
             await worker.StopAsync();
         }
         _workers.Clear();
+        
+        // Clear device queues
+        foreach (var queue in _deviceQueues.Values)
+        {
+            queue.Clear();
+        }
+        _deviceQueues.Clear();
+        
+        if (!wasActive)
+        {
+            throw new NullReferenceException("Monitoring is not active");
+        }
     }
 
     private void GenerateScanTask(string deviceId, byte slaveId, FrameConfig frame, int frameIndex)
